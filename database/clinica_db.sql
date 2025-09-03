@@ -47,9 +47,10 @@ CREATE TABLE turnos (
 -- Roles iniciales
 INSERT INTO roles (nombre) VALUES ('Admin'), ('Secretario'), ('Medico'), ('Paciente');
 
+
 -- Especialidades iniciales
 INSERT INTO especialidades (nombre) VALUES ('Cardiología'), ('Pediatría'), ('Dermatología');
 
 -- Usuario Admin de prueba
 INSERT INTO usuarios (nombre, email, password, rol_id) 
-VALUES ('Administrador', 'admin@clinica.com', '123456', 1);
+VALUES ('Administrador', 'admin@clinica.com', '$2y$10$Vy85czsv5DjIR3fFolf2m.izDB780gVGWM2jHuQVKrtUfSF7d66je', 1);

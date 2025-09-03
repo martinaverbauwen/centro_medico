@@ -1,0 +1,19 @@
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #38e6b0 0%, #4f8cff 100%);
+  color: #fff;
+}
+
+.dashboard-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.dashboard-container p {
+  font-size: 1.2rem;
+}
