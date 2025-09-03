@@ -1,5 +1,5 @@
 
-## ✨ Funcionalidades de la rama
+## ✨ Funcionalidades de la rama 3/9/2025
 - Autenticación segura con tokens y encriptacion de contraseñas.
 - Registro (solo para pacientes), al crear un usuario automaticamente se le asigna el rol de paciente.
 - Login funcional.
