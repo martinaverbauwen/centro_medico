@@ -35,6 +35,10 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'usuarios',
+        ],
         'api' => [
             'driver' => 'sanctum',
             'provider' => 'usuarios',
@@ -61,7 +65,7 @@ return [
     'providers' => [
         'usuarios' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Usuario::class,
+            'model'  => App\Models\Usuario::class,   // 👈 tu modelo
         ],
     ],
 
