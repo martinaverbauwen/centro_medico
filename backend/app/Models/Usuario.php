@@ -6,7 +6,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Rol;
+use App\Models\Role;
+use App\Models\Especialidad;
 
 class Usuario extends Authenticatable
 {
@@ -21,7 +22,7 @@ class Usuario extends Authenticatable
 
     protected $hidden = ['password'];
 
-    public function rol()          { return $this->belongsTo(Rol::class, 'rol_id'); }
+    public function rol()          { return $this->belongsTo(Role::class, 'rol_id'); }
     public function especialidad() { return $this->belongsTo(Especialidad::class, 'especialidad_id'); }
     public function turnosPaciente(){ return $this->hasMany(Turno::class, 'paciente_id'); }
     public function turnosMedico() { return $this->hasMany(Turno::class, 'medico_id'); }
