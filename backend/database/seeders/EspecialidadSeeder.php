@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Especialidade;
+use App\Models\Especialidad;
 
 class EspecialidadSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class EspecialidadSeeder extends Seeder
             ['nombre'=>'Cardiología'],
             ['nombre'=>'Dermatología'],
         ] as $e) {
-            Especialidade::firstOrCreate(['nombre'=>$e['nombre']], $e);
+            Especialidad::firstOrCreate(['nombre'=>$e['nombre']], $e);
         }
     }
 }
