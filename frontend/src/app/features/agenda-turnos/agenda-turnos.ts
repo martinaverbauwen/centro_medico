@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-app',
+  selector: 'app-agenda-turnos',
   imports: [],
   template: `
     <p>
-      app works!
+      agenda-turnos works!
     </p>
   `,
   styles: ``
 })
-export class App {
+export class AgendaTurnos {
 
 }
