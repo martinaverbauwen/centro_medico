@@ -1,0 +1,81 @@
+.agendar-turno-form {
+  background: #fff;
+  color: #232946;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 32px 0 rgba(44,62,80,0.13);
+  padding: 3.5rem 4vw 2.5rem 4vw;
+  margin: 3.5rem auto;
+  max-width: 600px;
+  min-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: fadeInDown 0.7s;
+}
+.agendar-turno-form h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2.2rem;
+  letter-spacing: 0.5px;
+  color: #4f8cff;
+  text-align: center;
+}
+.agendar-turno-form label {
+  font-weight: 600;
+  margin-top: 1.2rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.08rem;
+  color: #232946;
+}
+.agendar-turno-form input,
+.agendar-turno-form select {
+  border: 1px solid #e0e7ff;
+  border-radius: 0.7rem;
+  padding: 0.9rem 1.1rem;
+  font-size: 1.08rem;
+  margin-bottom: 1.1rem;
+  color: #232946;
+  width: 100%;
+  box-sizing: border-box;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+.agendar-turno-form input:focus,
+.agendar-turno-form select:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+.agendar-turno-form button {
+  background: linear-gradient(90deg, #4f8cff 0%, #38b6ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 1.1rem 2.5rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px 0 rgba(44,62,80,0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-top: 1.5rem;
+  align-self: center;
+}
+.agendar-turno-form button:hover {
+  background: #4f8cff;
+  color: #fff;
+}
+.agendar-turno-form button:hover {
+  background: #4f8cff;
+  color: #fff;
+}
+.agendar-mensaje {
+  margin-top: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #38b6ff;
+  font-size: 1.08rem;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,52 @@
+<div class="usuarios-container">
+  <h2>Gestión de Usuarios</h2>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Formulario de alta -->
+  <form (ngSubmit)="crearUsuario()" #formNuevo="ngForm" class="form-alta">
+    <input type="text" placeholder="Nombre" [(ngModel)]="nuevoUsuario.nombre" name="nombre" required />
+    <input type="text" placeholder="Apellido" [(ngModel)]="nuevoUsuario.apellido" name="apellido" required />
+    <input type="email" placeholder="Email" [(ngModel)]="nuevoUsuario.email" name="email" required />
+  <input type="number" placeholder="Rol ID" [(ngModel)]="nuevoUsuario.rol_id" name="rol_id" required />
+  <input type="password" placeholder="Contraseña" [(ngModel)]="nuevoUsuario.password" name="password" required style="min-width: 180px;" />
+  <button type="submit" [disabled]="formNuevo.invalid">Agregar</button>
+  </form>
+
+  <!-- Tabla de usuarios -->
+  <table class="usuarios-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Rol ID</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.id }}</td>
+        <td *ngIf="editando !== usuario.id">{{ usuario.nombre }}</td>
+        <td *ngIf="editando === usuario.id"><input [(ngModel)]="usuarioEdit.nombre" name="editNombre{{usuario.id}}" /></td>
+
+        <td *ngIf="editando !== usuario.id">{{ usuario.apellido }}</td>
+        <td *ngIf="editando === usuario.id"><input [(ngModel)]="usuarioEdit.apellido" name="editApellido{{usuario.id}}" /></td>
+
+        <td *ngIf="editando !== usuario.id">{{ usuario.email }}</td>
+        <td *ngIf="editando === usuario.id"><input [(ngModel)]="usuarioEdit.email" name="editEmail{{usuario.id}}" /></td>
+
+        <td *ngIf="editando !== usuario.id">{{ usuario.rol_id }}</td>
+        <td *ngIf="editando === usuario.id"><input [(ngModel)]="usuarioEdit.rol_id" name="editRol{{usuario.id}}" /></td>
+
+        <td>
+          <button *ngIf="editando !== usuario.id" (click)="editarUsuario(usuario)">Editar</button>
+          <button *ngIf="editando === usuario.id" (click)="guardarEdicion()">Guardar</button>
+          <button *ngIf="editando === usuario.id" (click)="cancelarEdicion()">Cancelar</button>
+          <button (click)="eliminarUsuario(usuario.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

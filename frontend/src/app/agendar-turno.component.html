@@ -1,0 +1,23 @@
+<div class="agendar-turno-form">
+  <h2>Agendar nuevo turno</h2>
+  <form (ngSubmit)="agendar()" #form="ngForm">
+    <label>Médico:</label>
+    <select [(ngModel)]="medico_id" name="medico_id" required>
+      <option value="" disabled selected>Selecciona un médico</option>
+      <option *ngFor="let m of medicos" [value]="m.id">{{ m.nombre }} {{ m.apellido }}</option>
+    </select>
+    <label>Especialidad:</label>
+    <select [(ngModel)]="especialidad_id" name="especialidad_id" required>
+      <option value="" disabled selected>Selecciona una especialidad</option>
+      <option *ngFor="let e of especialidades" [value]="e.id">{{ e.nombre }}</option>
+    </select>
+    <label>Motivo:</label>
+    <input type="text" [(ngModel)]="motivo" name="motivo" required />
+    <label>Fecha:</label>
+    <input type="date" [(ngModel)]="fecha" name="fecha" required />
+    <label>Hora:</label>
+    <input type="time" [(ngModel)]="hora" name="hora" required />
+    <button type="submit" [disabled]="cargando">Agendar</button>
+  </form>
+  <div *ngIf="mensaje" class="agendar-mensaje">{{ mensaje }}</div>
+</div>

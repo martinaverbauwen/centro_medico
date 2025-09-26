@@ -1,4 +1,116 @@
-<div class="dashboard-container">
-  <h1>Bienvenido al Dashboard</h1>
-  <p>Has iniciado sesión correctamente.</p>
+<div class="dashboard-layout pro">
+  <aside class="sidebar pro">
+    <div class="sidebar-header pro">
+      <img class="avatar" [src]="'https://ui-avatars.com/api/?name=' + userName + '&background=4f8cff&color=fff&rounded=true&size=64'" alt="avatar" />
+      <div class="sidebar-user">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-role">{{ userRole }}</span>
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <nav class="sidebar-nav pro">
+      <a *ngIf="userRole === 'administrador'" class="nav-link active" routerLink="/usuarios"><span class="icon">👤</span><span>Usuarios</span></a>
+      <a *ngIf="userRole === 'administrador' || userRole === 'secretario' || userRole === 'medico'" class="nav-link" routerLink="/turnos-medico"><span class="icon">📅</span><span>Turnos</span></a>
+      <a *ngIf="userRole === 'paciente' || userRole === 'cliente' || userRole === 'Paciente'" class="nav-link" (click)="agendarTurno()"><span class="icon">📝</span><span>Agendar turno</span></a>
+    <!-- cierre de nav corregido -->
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn pro" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </aside>
+  <main class="dashboard-main pro">
+    <!-- Administrador -->
+    <div *ngIf="userRole === 'administrador'">
+      <div class="dashboard-header pro">
+        <h1>Panel de Administración</h1>
+        <span class="dashboard-date">{{ fechaArgentina }}</span>
+      </div>
+      <div class="dashboard-cards pro">
+        <div class="dashboard-card pro">
+          <span class="card-icon">👤</span>
+          <h2>Gestión de Usuarios</h2>
+          <p>Administra los usuarios del sistema.</p>
+          <a class="card-btn" routerLink="/usuarios">Ver usuarios</a>
+        </div>
+        <div class="dashboard-card pro">
+          <span class="card-icon">📅</span>
+          <h2>Gestión de Turnos</h2>
+          <p>Visualiza y administra los turnos médicos.</p>
+          <a class="card-btn" routerLink="/turnos-medico">Ver turnos</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secretario -->
+    <div *ngIf="userRole === 'secretario'">
+      <div class="dashboard-header pro">
+        <h1>Panel del Secretario</h1>
+        <span class="dashboard-date">{{ fechaArgentina }}</span>
+      </div>
+      <div class="dashboard-cards pro">
+        <div class="dashboard-card pro">
+          <span class="card-icon">📅</span>
+          <h2>Gestión de Turnos</h2>
+          <p>Visualiza y administra los turnos médicos.</p>
+          <a class="card-btn" routerLink="/turnos-medico">Ver turnos</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Médico -->
+    <div *ngIf="userRole === 'medico'">
+      <div class="dashboard-header pro">
+        <h1>Panel del Médico</h1>
+        <span class="dashboard-date">{{ fechaArgentina }}</span>
+      </div>
+      <div class="dashboard-cards pro">
+        <div class="dashboard-card pro">
+          <span class="card-icon">📅</span>
+          <h2>Agenda de Turnos</h2>
+          <p>Visualiza y administra tus turnos médicos.</p>
+          <a class="card-btn" routerLink="/turnos-medico">Ver agenda</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paciente y Cliente -->
+    <div *ngIf="userRole === 'paciente' || userRole === 'cliente' || userRole === 'Paciente'">
+      <div class="dashboard-header pro">
+        <h1>Panel del Paciente</h1>
+        <span class="dashboard-date">{{ fechaArgentina }}</span>
+      </div>
+      <div class="agendar-banner">
+        <h2>¿Deseas agendar un turno?</h2>
+        <button class="agendar-btn" (click)="agendarTurno()">Agendar nuevo turno</button>
+      </div>
+      <div class="dashboard-card pro" style="margin-bottom:2rem;">
+        <h2>Mis turnos</h2>
+        <div *ngIf="cargandoTurnos">Cargando turnos...</div>
+        <div *ngIf="errorTurnos">{{ errorTurnos }}</div>
+        <table class="turnos-table" *ngIf="turnos.length">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Médico</th>
+              <th>Especialidad</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let turno of turnos">
+              <td>{{ turno.fecha_hora | date:'dd/MM/yyyy' }}</td>
+              <td>{{ turno.fecha_hora | date:'HH:mm' }}</td>
+              <td>{{ turno.medico?.nombre }} {{ turno.medico?.apellido }}</td>
+              <td>{{ turno.especialidad?.nombre }}</td>
+              <td>{{ turno.estado }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="!turnos.length && !cargandoTurnos">No tienes turnos agendados.</div>
+      </div>
+    </div>
+    <!-- Tarjetas duplicadas eliminadas, cada rol tiene su sección arriba -->
+    <router-outlet></router-outlet>
+  </main>
 </div>

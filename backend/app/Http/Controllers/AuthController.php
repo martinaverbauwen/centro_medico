@@ -19,11 +19,11 @@ class AuthController extends Controller
             'password' => ['required','string','min:6'],
             'dni' => ['nullable','string','max:20','unique:usuarios,dni'],
             'telefono' => ['nullable','string','max:30'],
-            'rol' => ['nullable', Rule::in(['administrador','secretario','medico','cliente'])],
+            'rol' => ['nullable', Rule::in(['administrador','secretario','medico','cliente','Paciente','paciente'])],
             'especialidad_id' => ['nullable','exists:especialidades,id'],
         ]);
 
-        $rol = Role::where('nombre', $data['rol'] ?? 'cliente')->firstOrFail();
+    $rol = Role::where('nombre', $data['rol'] ?? 'paciente')->firstOrFail();
 
         $user = Usuario::create([
             'nombre' => $data['nombre'],
@@ -80,4 +80,3 @@ class AuthController extends Controller
         return response()->json(['message'=>'Sesión cerrada']);
     }
 }
-

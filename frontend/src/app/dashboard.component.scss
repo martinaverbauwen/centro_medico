@@ -1,19 +1,241 @@
-.dashboard-container {
-  min-height: 100vh;
+// Banner moderno para agendar turno paciente
+.agendar-banner {
+  background: linear-gradient(90deg, #4f8cff 0%, #38b6ff 100%);
+  color: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 16px 0 rgba(44,62,80,0.10);
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #38e6b0 0%, #4f8cff 100%);
+  animation: fadeInDown 0.7s;
+}
+.agendar-banner h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.5px;
+}
+.agendar-btn {
+  background: #fff;
+  color: #4f8cff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px 0 rgba(44,62,80,0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-top: 0.5rem;
+}
+.agendar-btn:hover {
+  background: #4f8cff;
   color: #fff;
 }
-
-.dashboard-container h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+.logout-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.logout-btn:hover {
+  background: #c0392b;
 }
 
-.dashboard-container p {
-  font-size: 1.2rem;
+
+// PRO DASHBOARD STYLES
+.dashboard-layout.pro {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f0fdfa 100%);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+.sidebar.pro {
+  width: 270px;
+  background: #232946;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.2rem 1.2rem 1.2rem;
+  box-shadow: 2px 0 24px rgba(44, 62, 80, 0.10);
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  position: relative;
+}
+.sidebar-header.pro {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 2.2rem;
+}
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 3px solid #4f8cff;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.15);
+}
+.sidebar-user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.user-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.user-role {
+  font-size: 0.95rem;
+  color: #38e6b0;
+}
+.sidebar-divider {
+  height: 1px;
+  background: #4f8cff44;
+  margin-bottom: 1.5rem;
+  border-radius: 2px;
+}
+.sidebar-nav.pro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.13rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 0.7rem;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 500;
+}
+.nav-link.active, .nav-link:hover {
+  background: linear-gradient(90deg, #4f8cff 60%, #38e6b0 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+}
+.icon {
+  font-size: 1.4rem;
+}
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+.logout-btn.pro {
+  background: linear-gradient(90deg, #e74c3c 60%, #ff7675 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(231,76,60,0.10);
+}
+.logout-btn.pro:hover {
+  background: linear-gradient(90deg, #ff7675 0%, #e74c3c 100%);
+}
+.dashboard-main.pro {
+  flex: 1;
+  padding: 3.5rem 3rem 2rem 3rem;
+  color: #232946;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+.dashboard-header.pro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.7rem;
+}
+.dashboard-header.pro h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.dashboard-date {
+  font-size: 1.1rem;
+  color: #4f8cff;
+  font-weight: 500;
+}
+.dashboard-cards.pro {
+  display: flex;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.dashboard-card.pro {
+  background: rgba(255,255,255,0.85);
+  border-radius: 1.3rem;
+  box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
+  padding: 2.2rem 1.7rem;
+  min-width: 240px;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+  border: 1.5px solid #e0e7ff;
+  backdrop-filter: blur(2px);
+}
+.dashboard-card.pro:hover {
+  box-shadow: 0 16px 48px rgba(44, 62, 80, 0.22);
+  transform: translateY(-4px) scale(1.03);
+}
+.card-icon {
+  font-size: 2.7rem;
+  margin-bottom: 1.1rem;
+  color: #4f8cff;
+  filter: drop-shadow(0 2px 8px #4f8cff33);
+}
+.dashboard-card.pro h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #232946;
+}
+.dashboard-card.pro p {
+  color: #38e6b0;
+  font-size: 1.08rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+.card-btn {
+  background: linear-gradient(90deg, #4f8cff 60%, #38e6b0 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.6rem 1.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+}
+.card-btn:hover {
+  background: linear-gradient(90deg, #38e6b0 0%, #4f8cff 100%);
 }

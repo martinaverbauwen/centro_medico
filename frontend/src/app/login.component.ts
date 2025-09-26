@@ -25,7 +25,9 @@ export class LoginComponent {
     this.error = '';
     this.auth.login(this.email, this.password).subscribe({
       next: (res) => {
+        console.log('Login response:', res);
         this.auth.setToken(res.token);
+        this.auth.setUser(res.usuario);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

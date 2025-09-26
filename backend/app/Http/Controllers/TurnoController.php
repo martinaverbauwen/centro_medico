@@ -22,7 +22,7 @@ class TurnoController extends Controller
             ->orderBy('fecha_hora');
 
         // Visibilidad según rol
-        if ($user->rol->nombre === 'medico') {
+    if ($user->rol->nombre === 'medico') {
             $query->where('medico_id', $user->id);
         }
 
@@ -63,7 +63,7 @@ class TurnoController extends Controller
             'observaciones'   => ['nullable','string'],
         ]);
 
-        if ($user->rol->nombre === 'medico' && (int)$data['medico_id'] !== (int)$user->id) {
+    if ($user->rol->nombre === 'medico' && (int)$data['medico_id'] !== (int)$user->id) {
             return response()->json(['message' => 'No autorizado: el médico solo puede crearse turnos a sí mismo'], 403);
         }
 
@@ -87,7 +87,7 @@ class TurnoController extends Controller
     public function show(Turno $turno, Request $request)
     {
         $user = $request->user();
-        if ($user->rol->nombre === 'medico' && $turno->medico_id !== $user->id) {
+    if ($user->rol->nombre === 'medico' && $turno->medico_id !== $user->id) {
             return response()->json(['message'=>'No autorizado'], 403);
         }
         return $turno->load(['paciente','medico','especialidad']);
@@ -102,7 +102,7 @@ class TurnoController extends Controller
     {
         $user = $request->user();
 
-        if ($user->rol->nombre === 'medico') {
+    if ($user->rol->nombre === 'medico') {
             if ($turno->medico_id !== $user->id) {
                 return response()->json(['message'=>'No autorizado'], 403);
             }
