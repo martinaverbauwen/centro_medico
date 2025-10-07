@@ -30,7 +30,8 @@ Route::middleware(['auth:sanctum','role:administrador,secretario'])->group(funct
     Route::apiResource('usuarios', UsuariosController::class);
 });
 
-Route::middleware(['auth:sanctum','role:Admin,Secretario,Medico'])->group(function () {
+Route::middleware(['auth:sanctum','role:administrador,secretario,medico'])->group(function () {
     Route::apiResource('turnos', TurnoController::class);
 });
+
 
