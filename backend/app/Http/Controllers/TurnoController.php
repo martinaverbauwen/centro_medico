@@ -9,6 +9,53 @@ use Illuminate\Validation\Rule;
 class TurnoController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/turnos",
+     *     tags={"Turnos"},
+     *     summary="Listar turnos",
+     *     description="Obtiene lista de turnos. Admin/Secretario ven todos, Médicos solo los propios",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="estado",
+     *         in="query",
+     *         description="Filtrar por estado",
+     *         @OA\Schema(type="string", enum={"pendiente", "confirmado", "cancelado", "atendido"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="medico_id",
+     *         in="query",
+     *         description="Filtrar por médico",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="paciente_id",
+     *         in="query",
+     *         description="Filtrar por paciente",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="desde",
+     *         in="query",
+     *         description="Fecha desde",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="hasta",
+     *         in="query",
+     *         description="Fecha hasta",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de turnos",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="total", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="No autenticado")
+     * )
      * GET /api/turnos
      * Admin/Secretario => todos; Médico => solo los propios
      * Filtros: estado, medico_id, paciente_id, especialidad_id, desde, hasta, search
@@ -46,6 +93,38 @@ class TurnoController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/turnos",
+     *     tags={"Turnos"},
+     *     summary="Crear turno",
+     *     description="Crea un nuevo turno. Admin/Secretario pueden crear para cualquiera, Médicos solo para sí mismos",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"paciente_id","medico_id","especialidad_id","fecha_hora"},
+     *             @OA\Property(property="paciente_id", type="integer", example=1),
+     *             @OA\Property(property="medico_id", type="integer", example=2),
+     *             @OA\Property(property="especialidad_id", type="integer", example=1),
+     *             @OA\Property(property="fecha_hora", type="string", format="datetime", example="2024-12-01T10:00:00"),
+     *             @OA\Property(property="estado", type="string", enum={"pendiente","confirmado","cancelado","atendido"}, example="pendiente"),
+     *             @OA\Property(property="motivo", type="string", example="Consulta general"),
+     *             @OA\Property(property="observaciones", type="string", example="Paciente con dolor de cabeza")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Turno creado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="paciente", type="object"),
+     *             @OA\Property(property="medico", type="object"),
+     *             @OA\Property(property="especialidad", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=403, description="No autorizado"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      * POST /api/turnos
      * Admin/Secretario => crean para cualquiera
      * Médico => solo puede crear turnos donde medico_id sea el suyo
@@ -94,9 +173,45 @@ class TurnoController extends Controller
     }
 
     /**
-     * PUT/PATCH /api/turnos/{turno}
-     * Admin/Secretario => pueden editar todo
-     * Médico => solo puede editar sus turnos y solo estado/observaciones
+     * @OA\Put(
+     *     path="/api/turnos/{id}",
+     *     tags={"Turnos"},
+     *     summary="Actualizar turno",
+     *     description="Actualiza un turno médico. Admin/Secretario pueden editar todo, Médico solo sus turnos (estado/observaciones)",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del turno a actualizar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="paciente_id", type="integer", example=1, description="Solo admin/secretario"),
+     *             @OA\Property(property="medico_id", type="integer", example=2, description="Solo admin/secretario"),
+     *             @OA\Property(property="especialidad_id", type="integer", example=1, description="Solo admin/secretario"),
+     *             @OA\Property(property="fecha_hora", type="string", format="datetime", example="2025-10-15T14:30:00", description="Solo admin/secretario"),
+     *             @OA\Property(property="estado", type="string", enum={"pendiente","confirmado","cancelado","atendido"}, example="confirmado"),
+     *             @OA\Property(property="motivo", type="string", example="Control de rutina actualizado", description="Solo admin/secretario"),
+     *             @OA\Property(property="observaciones", type="string", example="Paciente confirmó asistencia")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Turno actualizado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="estado", type="string"),
+     *             @OA\Property(property="observaciones", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="Sin permisos"),
+     *     @OA\Response(response=404, description="Turno no encontrado"),
+     *     @OA\Response(response=422, description="Error de validación o conflicto de horario")
+     * )
      */
     public function update(Request $request, Turno $turno)
     {
@@ -146,8 +261,30 @@ class TurnoController extends Controller
     }
 
     /**
-     * DELETE /api/turnos/{turno}
-     * Solo admin/secretario
+     * @OA\Delete(
+     *     path="/api/turnos/{id}",
+     *     tags={"Turnos"},
+     *     summary="Eliminar turno",
+     *     description="Elimina un turno médico (solo admin/secretario)",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del turno a eliminar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Turno eliminado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Turno eliminado")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="Sin permisos - Solo admin/secretario"),
+     *     @OA\Response(response=404, description="Turno no encontrado")
+     * )
      */
     public function destroy(Request $request, Turno $turno)
     {

@@ -1,0 +1,205 @@
+# Guía completa para probar APIs en Swagger
+
+## 🔗 Acceso a Swagger
+1. Inicia el servidor Laravel: `php artisan serve`
+2. Ve a: http://localhost:8000/api/documentation
+
+## 🔐 PASO 1: AUTENTICACIÓN
+
+### Registrar un usuario (si no tienes uno)
+1. Busca: `POST /api/auth/register`
+2. Haz clic para expandir
+3. Clic en "Try it out"
+4. Usa este JSON:
+```json
+{
+  "nombre": "Admin",
+  "apellido": "Prueba",
+  "email": "admin@test.com",
+  "password": "123456",
+  "dni": "12345678",
+  "telefono": "1234567890",
+  "rol": "administrador"
+}
+```
+5. Clic en "Execute"
+6. **COPIA EL TOKEN** de la respuesta
+
+### Hacer Login (alternativa)
+1. Busca: `POST /api/auth/login`
+2. Usa este JSON:
+```json
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+```
+3. **COPIA EL TOKEN** de la respuesta
+
+### Autorizar en Swagger
+1. **Busca el botón "Authorize"** (🔒) en la parte superior
+2. **Haz clic en "Authorize"**
+3. **Pega SOLO el token** (sin "Bearer"):
+   Ejemplo: `163|FwTUwZIs9hgZsnCHx2MHq0dfIpusg7bWkINC2juf6a94d3c3`
+4. **Clic en "Authorize"**
+5. **Cierra el modal**
+6. **Verifica**: El candado debe verse cerrado 🔒
+
+## 👥 PASO 2: PROBAR ENDPOINTS DE USUARIOS
+
+### Listar usuarios
+1. `GET /api/usuarios`
+2. "Try it out" → "Execute"
+3. **Deberías ver código 200** y lista de usuarios
+
+### Crear usuario
+1. `POST /api/usuarios`
+2. JSON de ejemplo:
+```json
+{
+  "nombre": "Juan",
+  "apellido": "Médico",
+  "email": "medico@test.com",
+  "password": "123456",
+  "rol_id": 3,
+  "especialidad_id": 1
+}
+```
+
+### Ver un usuario específico
+1. `GET /api/usuarios/{id}`
+2. Pon un ID existente (ej: 1)
+3. Execute
+
+### Actualizar usuario
+1. `PUT /api/usuarios/{id}`
+2. Pon un ID existente
+3. JSON con campos a actualizar:
+```json
+{
+  "nombre": "Juan Actualizado",
+  "telefono": "9876543210"
+}
+```
+
+### Eliminar usuario
+1. `DELETE /api/usuarios/{id}`
+2. Pon un ID existente
+3. Execute (⚠️ Esto elimina realmente el usuario)
+
+## 📅 PASO 3: PROBAR ENDPOINTS DE TURNOS
+
+### Listar turnos
+1. `GET /api/turnos`
+2. Puedes usar filtros:
+   - `estado`: pendiente, confirmado, cancelado, atendido
+   - `medico_id`: ID del médico
+   - `desde`: fecha inicio (YYYY-MM-DD)
+   - `hasta`: fecha fin (YYYY-MM-DD)
+
+### Crear turno
+1. `POST /api/turnos`
+2. JSON de ejemplo:
+```json
+{
+  "paciente_id": 1,
+  "medico_id": 2,
+  "especialidad_id": 1,
+  "fecha_hora": "2025-10-08T10:00:00",
+  "estado": "pendiente",
+  "motivo": "Consulta general"
+}
+```
+
+### Ver turno específico
+1. `GET /api/turnos/{id}`
+2. Pon un ID de turno existente
+
+### Actualizar turno
+1. `PUT /api/turnos/{id}`
+2. JSON para cambiar estado:
+```json
+{
+  "estado": "confirmado",
+  "observaciones": "Turno confirmado por secretaria"
+}
+```
+
+### Eliminar turno
+1. `DELETE /api/turnos/{id}`
+2. ⚠️ Solo admin/secretario pueden eliminar
+
+## 🔍 PASO 4: PROBAR OTROS ENDPOINTS
+
+### Ver perfil actual
+1. `GET /api/auth/me`
+2. Muestra datos del usuario autenticado
+
+### Cerrar sesión
+1. `POST /api/auth/logout`
+2. Invalida el token actual
+
+## 📊 CÓDIGOS DE RESPUESTA
+
+### ✅ Códigos de éxito:
+- **200**: OK - Operación exitosa
+- **201**: Created - Recurso creado exitosamente
+
+### ❌ Códigos de error:
+- **400**: Bad Request - Datos inválidos
+- **401**: Unauthorized - No autenticado (falta token)
+- **403**: Forbidden - Sin permisos (rol incorrecto)
+- **404**: Not Found - Recurso no encontrado
+- **422**: Unprocessable Entity - Error de validación
+
+## 🛠️ FILTROS Y PARÁMETROS ÚTILES
+
+### En /api/usuarios:
+- `q`: Buscar por nombre, apellido, email, DNI
+- `rol`: Filtrar por rol específico
+- `especialidad`: Filtrar por especialidad
+- `per_page`: Registros por página
+
+### En /api/turnos:
+- `estado`: pendiente, confirmado, cancelado, atendido
+- `medico_id`: Turnos de un médico específico
+- `paciente_id`: Turnos de un paciente específico
+- `desde` y `hasta`: Rango de fechas
+
+## 🚨 ERRORES COMUNES
+
+### "Failed to fetch"
+- **Causa**: CORS o servidor no iniciado
+- **Solución**: Verificar que `php artisan serve` esté corriendo
+
+### "Unauthenticated"
+- **Causa**: Token no configurado o expirado
+- **Solución**: Hacer login y configurar token en "Authorize"
+
+### "Forbidden"
+- **Causa**: Usuario sin permisos para esa acción
+- **Solución**: Usar usuario con rol administrador o secretario
+
+### Error 422
+- **Causa**: Datos de entrada inválidos
+- **Solución**: Verificar que todos los campos requeridos estén presentes
+
+## 💡 CONSEJOS
+
+1. **Siempre autorízate primero** antes de probar endpoints protegidos
+2. **Copia los IDs** de las respuestas para usar en otros endpoints
+3. **Lee las respuestas** para entender la estructura de datos
+4. **Usa emails únicos** al crear usuarios (no repetir emails)
+5. **Verifica las fechas** en formato ISO (YYYY-MM-DDTHH:mm:ss)
+
+## 🎯 PARA DEMOSTRAR AL PROFESOR
+
+1. **Mostrar registro** → **Login** → **Autorización**
+2. **CRUD completo de usuarios**: Crear → Listar → Ver → Actualizar → Eliminar
+3. **CRUD de turnos** con diferentes filtros
+4. **Manejo de errores**: Mostrar 401, 403, 422
+5. **Diferentes roles**: Probar con administrador, secretario, médico
+6. **Filtros avanzados**: Búsquedas, paginación, fechas
+
+---
+¡Con esta guía puedes demostrar todo el funcionamiento de tu API!
