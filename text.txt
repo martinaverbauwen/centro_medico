@@ -1,0 +1,100 @@
+## 7. Errores comunes y soluciones
+
+### 1. Error: etiqueta </tr> duplicada en turnos-medico.component.html
+**Solución:** Elimina la línea extra </tr> en el tbody, solo debe haber una por fila.
+
+### 2. Error: Property 'firstDayOfWeek', 'selectDay', 'turnosDelDia' does not exist on type 'TurnosMedicoComponent'
+**Solución:** Agrega los métodos y propiedades en el componente:
+```typescript
+get firstDayOfWeek(): number { ... }
+selectDay(dia: number) { ... }
+turnosDelDia(): any[] { ... }
+```
+
+### 3. Error: NG8113 - Componente no usado en el template de App
+**Solución:** En `app.ts`, solo importa componentes que realmente uses en el template principal. Normalmente basta con `RouterOutlet`.
+
+### 4. Error: No arranca Angular (ng serve)
+**Solución:**
+- Verifica que estés en la carpeta `frontend`.
+- Ejecuta `npm install` si nunca lo hiciste.
+- Revisa que el archivo `angular.json` exista.
+
+### 5. Error: No se ven los turnos, agenda vacía
+**Solución:**
+- Verifica que la API backend esté corriendo (`php artisan serve`).
+- Revisa que el usuario tenga el rol correcto y que existan turnos en la base de datos.
+
+### 6. Error: Problemas con migraciones o seeders
+**Solución:**
+- Ejecuta `php artisan migrate:fresh --seed` para resetear y poblar la base de datos.
+
+### 7. Error: No se puede logear
+**Solución:**
+- Verifica que el usuario exista en la base de datos y que la contraseña sea correcta.
+- Revisa la configuración de CORS y la URL de la API en el frontend.
+
+---
+# Requisitos para correr el proyecto Centro Médico
+
+## 1. Requisitos generales
+- Node.js v18 o superior
+- npm v9 o superior
+- PHP 8.1 o superior
+- Composer
+- MySQL o MariaDB (o el motor que uses para la base de datos)
+
+## 2. Backend (Laravel)
+1. Ir a la carpeta `backend`
+2. Instalar dependencias:
+   ```bash
+   composer install
+   ```
+3. Copiar `.env.example` a `.env` y configurar la conexión a la base de datos.
+4. Generar la clave de la app:
+   ```bash
+   php artisan key:generate
+   ```
+5. Ejecutar migraciones y seeders:
+   ```bash
+   php artisan migrate --seed
+   ```
+6. Iniciar el servidor:
+   ```bash
+   php artisan serve
+   ```
+
+## 3. Frontend (Angular)
+1. Ir a la carpeta `frontend`
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
+3. Iniciar la app:
+   ```bash
+   ng serve
+   ```
+
+## 4. Acceso
+- Backend: http://localhost:8000
+- Frontend: http://localhost:4200
+
+## 5. Base de datos: roles necesarios
+En la tabla `roles` deben existir al menos estos registros:
+
+| id | nombre         |
+|----|---------------|
+| 1  | administrador |
+| 2  | secretario    |
+| 3  | medico        |
+| 4  | paciente      |
+
+Si usas los seeders incluidos (`php artisan migrate --seed`), estos roles se crean automáticamente.
+
+## 6. Otros
+- Si tienes problemas con dependencias, ejecuta `npm install` o `composer install` nuevamente.
+- Verifica que los puertos no estén ocupados.
+- Si usas Windows, ejecuta los comandos en PowerShell o CMD.
+
+---
+Cualquier duda, consultar el README.md o pedir ayuda al equipo.

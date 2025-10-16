@@ -1,0 +1,109 @@
+.usuarios-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+  padding: 2.5rem 2rem 2rem 2rem;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2a3a5e;
+  font-size: 2rem;
+}
+
+.form-alta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.form-alta input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border 0.2s;
+  min-width: 180px;
+  box-sizing: border-box;
+}
+.form-alta input:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+.form-alta button {
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-alta button:disabled {
+  background: #b3c6f7;
+  cursor: not-allowed;
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+}
+.usuarios-table th, .usuarios-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.usuarios-table th {
+  background: #eaf1fb;
+  color: #2a3a5e;
+  font-weight: 600;
+  border-bottom: 2px solid #d1d5db;
+}
+.usuarios-table tr:not(:last-child) td {
+  border-bottom: 1px solid #e5e7eb;
+}
+.usuarios-table tr:hover {
+  background: #f0f6ff;
+}
+.usuarios-table input {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.usuarios-table button {
+  margin-right: 0.3rem;
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.usuarios-table button:last-child {
+  background: #e74c3c;
+  margin-right: 0;
+}
+.usuarios-table button:hover {
+  background: #2563eb;
+}
+.usuarios-table button:last-child:hover {
+  background: #c0392b;
+}
+.error {
+  color: #e74c3c;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}

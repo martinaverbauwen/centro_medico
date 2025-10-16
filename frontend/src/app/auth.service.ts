@@ -16,9 +16,21 @@
       return this.http.post(`${this.apiUrl}/auth/register`, data);
     }
 
+
     setToken(token: string) {
       localStorage.setItem('token', token);
     }
+
+    setUser(user: any) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    getUser(): any {
+      const user = localStorage.getItem('user');
+      return user ? JSON.parse(user) : null;
+    }
+
+
 
     getToken(): string | null {
       return localStorage.getItem('token');
@@ -26,5 +38,6 @@
 
     logout() {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   }

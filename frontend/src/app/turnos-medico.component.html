@@ -1,0 +1,51 @@
+<div class="turnos-medico-container">
+  <h2>Agenda de Turnos del Médico</h2>
+  <!-- Sección de agendar turno eliminada, solo para dashboard -->
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Calendario visual -->
+  <div class="calendario-container">
+    <div class="calendario-header-bar">
+      <button class="calendario-arrow" (click)="cambiarMes(-1)">&#8592;</button>
+      <h3>{{ monthName | titlecase }} {{ currentYear }}</h3>
+      <button class="calendario-arrow" (click)="cambiarMes(1)">&#8594;</button>
+    </div>
+    <div class="calendario-grid">
+      <div class="calendario-day calendario-header" *ngFor="let d of ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']">{{ d }}</div>
+      <div *ngFor="let empty of [].constructor(firstDayOfWeek)"></div>
+      <div *ngFor="let day of [].constructor(daysInMonth); let i = index" class="calendario-day" [class.selected]="selectedDate?.getDate() === i+1 && selectedDate?.getMonth() === currentMonth && selectedDate?.getFullYear() === currentYear" (click)="selectDay(i+1)">
+        {{ i+1 }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Agenda del día seleccionado -->
+  <div *ngIf="selectedDate" class="calendario-agenda">
+    <h3>Turnos para {{ selectedDate | date:'dd/MM/yyyy' }}</h3>
+    <table class="turnos-table" *ngIf="turnosDelDia().length">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Paciente</th>
+          <th>Especialidad</th>
+          <th>Estado</th>
+          <th>Médico</th>
+          <!-- <th>Acciones</th> -->
+  <!-- cierre de fila correcto -->
+      </thead>
+      <tbody>
+        <tr *ngFor="let turno of turnosDelDia()">
+          <td>{{ turno.fecha_hora | date:'HH:mm' }}</td>
+          <td>{{ turno.paciente?.nombre }} {{ turno.paciente?.apellido }}</td>
+          <td>{{ turno.especialidad?.nombre }}</td>
+          <td>{{ turno.estado }}</td>
+          <td>{{ turno.medico?.nombre }} {{ turno.medico?.apellido }}</td>
+          <!-- Acciones eliminadas -->
+  <!-- cierre de fila correcto -->
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!turnosDelDia().length" class="no-turnos">No hay turnos para este día.</div>
+  </div>
+</div>

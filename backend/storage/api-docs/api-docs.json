@@ -1,0 +1,925 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Centro Médico API",
+        "description": "API para la gestión del centro médico",
+        "contact": {
+            "email": "admin@centromedico.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registrar usuario",
+                "operationId": "d764dd091cc4494ae0baf360b03319f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Juan"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario registrado exitosamente"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@centromedico.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "usuario": {
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas"
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Obtener usuario actual",
+                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
+                "responses": {
+                    "200": {
+                        "description": "Usuario actual",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nombre": {
+                                            "type": "string",
+                                            "example": "Juan"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "juan@example.com"
+                                        },
+                                        "rol": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sesión cerrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/turnos": {
+            "get": {
+                "tags": [
+                    "Turnos"
+                ],
+                "summary": "Listar turnos",
+                "description": "Obtiene lista de turnos. Admin/Secretario ven todos, Médicos solo los propios",
+                "operationId": "6adc8ab3972fa2e0a40a9ddec9b865b9",
+                "parameters": [
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "description": "Filtrar por estado",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pendiente",
+                                "confirmado",
+                                "cancelado",
+                                "atendido"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "medico_id",
+                        "in": "query",
+                        "description": "Filtrar por médico",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "paciente_id",
+                        "in": "query",
+                        "description": "Filtrar por paciente",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desde",
+                        "in": "query",
+                        "description": "Fecha desde",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "hasta",
+                        "in": "query",
+                        "description": "Fecha hasta",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de turnos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Turnos"
+                ],
+                "summary": "Crear turno",
+                "description": "Crea un nuevo turno. Admin/Secretario pueden crear para cualquiera, Médicos solo para sí mismos",
+                "operationId": "99bc216a5722c88def2faab3dfae2a13",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "paciente_id",
+                                    "medico_id",
+                                    "especialidad_id",
+                                    "fecha_hora"
+                                ],
+                                "properties": {
+                                    "paciente_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "medico_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "especialidad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "fecha_hora": {
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2024-12-01T10:00:00"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pendiente",
+                                            "confirmado",
+                                            "cancelado",
+                                            "atendido"
+                                        ],
+                                        "example": "pendiente"
+                                    },
+                                    "motivo": {
+                                        "type": "string",
+                                        "example": "Consulta general"
+                                    },
+                                    "observaciones": {
+                                        "type": "string",
+                                        "example": "Paciente con dolor de cabeza"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Turno creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "paciente": {
+                                            "type": "object"
+                                        },
+                                        "medico": {
+                                            "type": "object"
+                                        },
+                                        "especialidad": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "No autorizado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/turnos/{id}": {
+            "put": {
+                "tags": [
+                    "Turnos"
+                ],
+                "summary": "Actualizar turno",
+                "description": "Actualiza un turno médico. Admin/Secretario pueden editar todo, Médico solo sus turnos (estado/observaciones)",
+                "operationId": "b09db997e2dac70bb0fbe205c2038b60",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del turno a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "paciente_id": {
+                                        "description": "Solo admin/secretario",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "medico_id": {
+                                        "description": "Solo admin/secretario",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "especialidad_id": {
+                                        "description": "Solo admin/secretario",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "fecha_hora": {
+                                        "description": "Solo admin/secretario",
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2025-10-15T14:30:00"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pendiente",
+                                            "confirmado",
+                                            "cancelado",
+                                            "atendido"
+                                        ],
+                                        "example": "confirmado"
+                                    },
+                                    "motivo": {
+                                        "description": "Solo admin/secretario",
+                                        "type": "string",
+                                        "example": "Control de rutina actualizado"
+                                    },
+                                    "observaciones": {
+                                        "type": "string",
+                                        "example": "Paciente confirmó asistencia"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Turno actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "estado": {
+                                            "type": "string"
+                                        },
+                                        "observaciones": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    },
+                    "404": {
+                        "description": "Turno no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación o conflicto de horario"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Turnos"
+                ],
+                "summary": "Eliminar turno",
+                "description": "Elimina un turno médico (solo admin/secretario)",
+                "operationId": "90a5cffdb27234b86eb4ab2e09bd9c44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del turno a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Turno eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Turno eliminado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permisos - Solo admin/secretario"
+                    },
+                    "404": {
+                        "description": "Turno no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Listar usuarios",
+                "description": "Obtiene lista de usuarios con filtros opcionales",
+                "operationId": "600ec787a82d08ec298424fd97dd33d9",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Buscar por nombre, apellido, email o DNI",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rol",
+                        "in": "query",
+                        "description": "Filtrar por rol",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "administrador",
+                                "secretario",
+                                "medico",
+                                "paciente"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "especialidad",
+                        "in": "query",
+                        "description": "Filtrar por especialidad",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Registros por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Crear usuario",
+                "description": "Crea un nuevo usuario en el sistema",
+                "operationId": "12af6b3d715bf3099de301b50a13d0da",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "email",
+                                    "password",
+                                    "rol_id"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Juan"
+                                    },
+                                    "apellido": {
+                                        "type": "string",
+                                        "example": "Pérez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    },
+                                    "dni": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    },
+                                    "rol_id": {
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "especialidad_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "nombre": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "rol": {
+                                            "type": "object"
+                                        },
+                                        "especialidad": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios/{id}": {
+            "put": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Actualizar usuario",
+                "description": "Actualiza los datos de un usuario existente",
+                "operationId": "01c6b403efd4f7869e6703e481d4a8d7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Juan Actualizado"
+                                    },
+                                    "apellido": {
+                                        "type": "string",
+                                        "example": "Pérez Modificado"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan.nuevo@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "nueva123"
+                                    },
+                                    "dni": {
+                                        "type": "string",
+                                        "example": "98765432"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "011-1111-2222"
+                                    },
+                                    "rol_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "especialidad_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "nombre": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Eliminar usuario",
+                "description": "Elimina un usuario del sistema",
+                "operationId": "811296f77edc543b83012b9455dea555",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario eliminado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Turnos",
+            "description": "Turnos"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Usuarios"
+        }
+    ]
+}

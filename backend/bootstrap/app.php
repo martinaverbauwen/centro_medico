@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             // alias preexistentes
             'role' => RoleMiddleware::class,
         ]);
+        
+        // Habilitar CORS para API
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
