@@ -13,7 +13,18 @@ import { AgendarTurnoComponent } from './agendar-turno.component';
   imports: [RouterOutlet, LoginComponent, DashboardComponent, RegisterComponent, UsuariosComponent, TurnosMedicoComponent, AgendarTurnoComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-app',
+  imports: [],
+  template: `
+    <p>
+      app works!
+    </p>
+  `,
+  styles: ``
 })
 export class App {
-  protected readonly title = signal('Centro Medico');
+
 }

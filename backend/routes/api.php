@@ -30,7 +30,8 @@ Route::middleware(['auth:sanctum','role:administrador,secretario'])->group(funct
     Route::apiResource('usuarios', UsuariosController::class);
 });
 
-//Crud de Turnos (acceso a admin, secretario y medico) recstricciones finas en el controller
 Route::middleware(['auth:sanctum','role:administrador,secretario,medico'])->group(function () {
     Route::apiResource('turnos', TurnoController::class);
 });
+
+
