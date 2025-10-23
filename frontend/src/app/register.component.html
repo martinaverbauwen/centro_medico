@@ -1,35 +1,73 @@
 <div class="register-container">
   <form *ngIf="!success" (ngSubmit)="register()" class="register-form">
     <h2>Crear cuenta</h2>
+
     <div class="input-group">
       <label for="nombre">Nombre</label>
       <input id="nombre" type="text" [(ngModel)]="form.nombre" name="nombre" required />
     </div>
+
     <div class="input-group">
       <label for="apellido">Apellido</label>
       <input id="apellido" type="text" [(ngModel)]="form.apellido" name="apellido" />
     </div>
+
     <div class="input-group">
       <label for="email">Email</label>
       <input id="email" type="email" [(ngModel)]="form.email" name="email" required />
     </div>
+
     <div class="input-group">
       <label for="password">Contraseña</label>
-      <input id="password" type="password" [(ngModel)]="form.password" name="password" required minlength="6" />
+      <input
+        id="password"
+        type="password"
+        [(ngModel)]="form.password"
+        name="password"
+        required
+        minlength="6"
+      />
     </div>
+
+    <!-- NUEVO: confirmación de contraseña -->
+    <div class="input-group">
+      <label for="password_confirmation">Confirmar contraseña</label>
+      <input
+        id="password_confirmation"
+        type="password"
+        [(ngModel)]="form.password_confirmation"
+        name="password_confirmation"
+        required
+        minlength="6"
+      />
+      <small class="error" *ngIf="form.password && form.password_confirmation && form.password !== form.password_confirmation">
+        Las contraseñas no coinciden
+      </small>
+    </div>
+
     <div class="input-group">
       <label for="dni">DNI</label>
       <input id="dni" type="text" [(ngModel)]="form.dni" name="dni" />
     </div>
+
     <div class="input-group">
       <label for="telefono">Teléfono</label>
       <input id="telefono" type="text" [(ngModel)]="form.telefono" name="telefono" />
     </div>
-  <!-- Campo de rol oculto, el valor se asigna automáticamente en el TS -->
-  <!-- Campo de especialidad oculto, solo para médicos -->
-    <button type="submit" [disabled]="loading">{{ loading ? 'Registrando...' : 'Registrarse' }}</button>
+
+    <!-- El rol se setea en el TS como 'paciente' -->
+    <!-- especialidad_id: no se envía en registro de paciente -->
+
+    <button
+      type="submit"
+      [disabled]="loading || (form.password && form.password_confirmation && form.password !== form.password_confirmation)"
+    >
+      {{ loading ? 'Registrando...' : 'Registrarse' }}
+    </button>
+
     <div class="error" *ngIf="error">{{ error }}</div>
   </form>
+
   <div *ngIf="success" class="success-box">
     <h3>¡Registro exitoso!</h3>
     <button (click)="goToLogin()">Iniciar sesión</button>

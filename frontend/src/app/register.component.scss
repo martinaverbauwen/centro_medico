@@ -51,6 +51,14 @@
   border-color: #38e6b0;
 }
 
+/* --- NUEVO: estilo para el aviso de error debajo del campo --- */
+.input-group small.error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+/* --- BOTONES --- */
 button[type="submit"] {
   padding: 0.8rem;
   border-radius: 0.7rem;
@@ -72,6 +80,7 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
+/* --- ERRORES GENERALES --- */
 .error {
   color: #e74c3c;
   text-align: center;
@@ -79,6 +88,7 @@ button[type="submit"]:disabled {
   margin-top: 0.5rem;
 }
 
+/* --- CAJA DE ÉXITO --- */
 .success-box {
   background: #fff;
   padding: 2rem;
@@ -86,10 +96,12 @@ button[type="submit"]:disabled {
   box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
   text-align: center;
 }
+
 .success-box h3 {
   color: #38e6b0;
   margin-bottom: 1rem;
 }
+
 .success-box button {
   padding: 0.7rem 1.5rem;
   border-radius: 0.7rem;
@@ -101,6 +113,7 @@ button[type="submit"]:disabled {
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .success-box button:hover {
   background: linear-gradient(90deg, #38e6b0 0%, #4f8cff 100%);
 }

@@ -1,23 +1,42 @@
 <div class="agendar-turno-form">
   <h2>Agendar nuevo turno</h2>
+
   <form (ngSubmit)="agendar()" #form="ngForm">
-    <label>Médico:</label>
-    <select [(ngModel)]="medico_id" name="medico_id" required>
-      <option value="" disabled selected>Selecciona un médico</option>
-      <option *ngFor="let m of medicos" [value]="m.id">{{ m.nombre }} {{ m.apellido }}</option>
-    </select>
+    <!-- Especialidad primero -->
     <label>Especialidad:</label>
-    <select [(ngModel)]="especialidad_id" name="especialidad_id" required>
+    <select [(ngModel)]="especialidad_id" name="especialidad_id" (change)="onEspecialidadChange()" required>
       <option value="" disabled selected>Selecciona una especialidad</option>
       <option *ngFor="let e of especialidades" [value]="e.id">{{ e.nombre }}</option>
     </select>
+
+    <!-- Médico (filtrado por especialidad) -->
+    <label>Médico:</label>
+    <select [(ngModel)]="medico_id" name="medico_id" required>
+      <option value="" disabled selected>Selecciona un médico</option>
+      <option *ngFor="let m of medicosFiltrados" [value]="m.id">
+        {{ m.apellido }}, {{ m.nombre }} — {{ m.especialidad?.nombre || '' }}
+      </option>
+    </select>
+    <small class="hint" *ngIf="especialidad_id && medicosFiltrados.length===0">
+      No hay médicos para esta especialidad.
+    </small>
+
+    <!-- Motivo -->
     <label>Motivo:</label>
     <input type="text" [(ngModel)]="motivo" name="motivo" required />
+
+    <!-- Fecha -->
     <label>Fecha:</label>
     <input type="date" [(ngModel)]="fecha" name="fecha" required />
+
+    <!-- Hora -->
     <label>Hora:</label>
     <input type="time" [(ngModel)]="hora" name="hora" required />
-    <button type="submit" [disabled]="cargando">Agendar</button>
+
+    <button type="submit" [disabled]="cargando">
+      {{ cargando ? 'Guardando...' : 'Agendar' }}
+    </button>
   </form>
+
   <div *ngIf="mensaje" class="agendar-mensaje">{{ mensaje }}</div>
 </div>
