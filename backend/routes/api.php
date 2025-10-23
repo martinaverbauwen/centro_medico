@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\EspecialidadController;
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -20,18 +22,20 @@ Route::prefix('auth')->group(function () {
 
 });
 
-// // Ejemplo de ruta protegida
-// Route::middleware('auth:sanctum')->get('/perfil', function () {
-//     return auth()->user()->load('rol','especialidad');
-// });
+
+Route::get('especialidades', [EspecialidadController::class, 'index']);
+
+Route::middleware(['auth:sanctum'])->get('medicos', [UsuariosController::class, 'medicos']);
 
 // CRUD de usuarios (solo administrador/secretario)
 Route::middleware(['auth:sanctum','role:administrador,secretario'])->group(function () {
     Route::apiResource('usuarios', UsuariosController::class);
 });
 
-Route::middleware(['auth:sanctum','role:administrador,secretario,medico'])->group(function () {
+
+Route::middleware(['auth:sanctum', 'role:administrador,secretario,medico,paciente'])->group(function () {
     Route::apiResource('turnos', TurnoController::class);
 });
+
 
 

@@ -7,6 +7,7 @@ use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -28,39 +29,50 @@ class AuthController extends Controller
      * )
      */
     public function register(Request $request)
-    {
-        $data = $request->validate([
-            'nombre' => ['required','string','max:100'],
-            'apellido' => ['nullable','string','max:100'],
-            'email' => ['required','email','max:150','unique:usuarios,email'],
-            'password' => ['required','string','min:6'],
-            'dni' => ['nullable','string','max:20','unique:usuarios,dni'],
-            'telefono' => ['nullable','string','max:30'],
-            'rol' => ['nullable', Rule::in(['administrador','secretario','medico','cliente','Paciente','paciente'])],
-            'especialidad_id' => ['nullable','exists:especialidades,id'],
-        ]);
+{
+    // normalizar 'rol' a minúsculas y poner 'paciente' por defecto si no viene
+    $rolNormalizado = Str::lower($request->input('rol', 'paciente'));
+    $request->merge(['rol' => $rolNormalizado]);
 
-    $rol = Role::where('nombre', $data['rol'] ?? 'paciente')->firstOrFail();
+    $data = $request->validate([
+        'nombre'           => ['required','string','max:100'],
+        'apellido'         => ['nullable','string','max:100'],
+        'email'            => ['required','email','max:150','unique:usuarios,email'],
+        'password'         => ['required','string','min:6','confirmed'], // <-- agrega password_confirmation si usás confirmación
+        'dni'              => ['nullable','string','max:20','unique:usuarios,dni'],
+        'telefono'         => ['nullable','string','max:30'],
+        'rol'              => ['nullable', Rule::in(['administrador','secretario','medico','paciente'])],
+        'especialidad_id'  => ['nullable','exists:especialidades,id'],
+    ]);
 
-        $user = Usuario::create([
-            'nombre' => $data['nombre'],
-            'apellido' => $data['apellido'] ?? null,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'dni' => $data['dni'] ?? null,
-            'telefono' => $data['telefono'] ?? null,
-            'rol_id' => $rol->id,
-            'especialidad_id' => $data['especialidad_id'] ?? null,
-        ]);
-
-        $token = $user->createToken('api')->plainTextToken;
-
+    // buscar rol SIN lanzar excepción (case-insensitive)
+    $rol = Role::whereRaw('LOWER(nombre) = ?', [$data['rol'] ?? 'paciente'])->first();
+    if (!$rol) {
         return response()->json([
-            'usuario' => $user->load('rol','especialidad'),
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ], 201);
+            'message' => 'El rol indicado no existe',
+            'errors'  => ['rol' => ['Rol inválido']],
+        ], 422);
     }
+
+    $user = Usuario::create([
+        'nombre'          => $data['nombre'],
+        'apellido'        => $data['apellido'] ?? null,
+        'email'           => $data['email'],
+        'password'        => Hash::make($data['password']),
+        'dni'             => $data['dni'] ?? null,
+        'telefono'        => $data['telefono'] ?? null,
+        'rol_id'          => $rol->id,
+        'especialidad_id' => $data['especialidad_id'] ?? null,
+    ]);
+
+    $token = $user->createToken('api')->plainTextToken;
+
+    return response()->json([
+        'usuario'    => $user->load('rol','especialidad'),
+        'token'      => $token,
+        'token_type' => 'Bearer',
+    ], 201);
+}
 
     /**
      * @OA\Post(
