@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
-
 class UsuariosController extends Controller
 {
     /**
@@ -34,7 +33,7 @@ class UsuariosController extends Controller
      *     @OA\Parameter(
      *         name="especialidad",
      *         in="query",
-     *         description="Filtrar por especialidad",
+     *         description="Filtrar por especialidad (ID)",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
@@ -55,7 +54,6 @@ class UsuariosController extends Controller
      *     @OA\Response(response=401, description="No autenticado"),
      *     @OA\Response(response=403, description="Sin permisos")
      * )
-     * Display a listing of the resource.
      */
     public function index(Request $request)
     {
@@ -118,7 +116,6 @@ class UsuariosController extends Controller
      *     @OA\Response(response=422, description="Error de validación"),
      *     @OA\Response(response=403, description="Sin permisos")
      * )
-     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
@@ -190,7 +187,7 @@ class UsuariosController extends Controller
      *     @OA\Response(response=422, description="Error de validación")
      * )
      */
-    public function update(\Illuminate\Http\Request $request, \App\Models\Usuario $usuario)
+    public function update(Request $request, \App\Models\Usuario $usuario)
     {
         $data = $request->validate([
             'nombre' => ['sometimes','required','string','max:100'],
@@ -251,4 +248,40 @@ class UsuariosController extends Controller
         $usuario->delete();
         return response()->json(['message' => 'Usuario eliminado']);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/medicos",
+     *     tags={"Usuarios"},
+     *     summary="Listar médicos (para agenda del paciente)",
+     *     description="Devuelve médicos y sus especialidades. Filtros opcionales por especialidad o búsqueda.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="especialidad_id",
+     *         in="query",
+     *         description="Filtrar por ID de especialidad",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="Buscar por nombre, apellido o DNI",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=200, description="Listado de médicos")
+     * )
+     */
+  public function medicos(\Illuminate\Http\Request $request)
+{
+    $q = \App\Models\Usuario::with(['especialidad:id,nombre','rol:id,nombre'])
+      ->whereHas('rol', fn($r) => $r->where('nombre','medico'))
+      ->select('id','nombre','apellido','especialidad_id');
+
+    if ($esp = $request->query('especialidad_id')) {
+        $q->where('especialidad_id', (int)$esp);
+    }
+
+    return $q->orderBy('apellido')->orderBy('nombre')->get();
+}
+
 }
