@@ -18,17 +18,22 @@ export class RegisterComponent {
     apellido: '',
     email: '',
     password: '',
+    password_confirmation: '',   // <-- NUEVO
     dni: '',
     telefono: '',
-  rol: 'Paciente'
+    rol: 'paciente'              // <-- ahora en minúscula
   };
+
   especialidades: any[] = [];
-  // roles eliminados, solo se registra como cliente
   loading = false;
   success = false;
   error = '';
 
-  constructor(private auth: AuthService, private router: Router, private http: HttpClient) {
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private http: HttpClient
+  ) {
     this.getEspecialidades();
   }
 
@@ -42,13 +47,29 @@ export class RegisterComponent {
   register() {
     this.loading = true;
     this.error = '';
-    this.auth.register(this.form).subscribe({
+
+    // Armamos el payload explícito para evitar mandar null/undefined no deseados
+    const payload: any = {
+      nombre: this.form.nombre,
+      apellido: this.form.apellido || undefined,
+      email: this.form.email,
+      password: this.form.password,
+      password_confirmation: this.form.password_confirmation, // <-- CLAVE
+      dni: this.form.dni || undefined,
+      telefono: this.form.telefono || undefined,
+      rol: (this.form.rol || 'paciente').toLowerCase()        // asegurar minúscula
+      // especialidad_id: solo si en algún momento registrás médicos
+    };
+
+    this.auth.register(payload).subscribe({
       next: () => {
         this.success = true;
         this.loading = false;
       },
       error: (err) => {
-        this.error = err.error?.message || 'Error en el registro';
+        // Mostrar mensaje del backend si viene
+        this.error = err?.error?.message
+          || (err?.error?.errors ? JSON.stringify(err.error.errors) : 'Error en el registro');
         this.loading = false;
       }
     });

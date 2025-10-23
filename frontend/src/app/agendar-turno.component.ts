@@ -12,53 +12,101 @@ import { AgendarTurnoService } from './agendar-turno.service';
   styleUrls: ['./agendar-turno.component.scss']
 })
 export class AgendarTurnoComponent {
-  motivo: string = '';
-  fecha: string = '';
-  hora: string = '';
+  motivo = '';
+  fecha = '';
+  hora = '';
   medico_id: string = '';
   especialidad_id: string = '';
-  medicos: any[] = [];
-  especialidades: any[] = [];
-  mensaje: string = '';
-  cargando: boolean = false;
 
-  constructor(private turnosService: TurnosMedicoService, private agendarService: AgendarTurnoService) {
-    this.cargarMedicos();
+  especialidades: any[] = [];
+  medicos: any[] = [];
+  medicosFiltrados: any[] = [];
+
+  mensaje = '';
+  cargando = false;
+
+  constructor(
+    private turnosService: TurnosMedicoService,
+    private agendarService: AgendarTurnoService
+  ) {
     this.cargarEspecialidades();
+    this.cargarMedicos(); // carga inicial (sin filtro) para mostrar todos o filtrar luego
+  }
+
+  cargarEspecialidades() {
+    this.agendarService.getEspecialidades().subscribe({
+      next: (data) => this.especialidades = data || [],
+      error: () => this.especialidades = []
+    });
   }
 
   cargarMedicos() {
     this.agendarService.getMedicos().subscribe({
-      next: (data) => this.medicos = data,
-      error: () => this.medicos = []
+      next: (data) => {
+        this.medicos = data || [];
+        this.filtrarMedicos();
+      },
+      error: () => {
+        this.medicos = [];
+        this.medicosFiltrados = [];
+      }
     });
   }
-  cargarEspecialidades() {
-    this.agendarService.getEspecialidades().subscribe({
-      next: (data) => this.especialidades = data,
-      error: () => this.especialidades = []
-    });
+
+  onEspecialidadChange() {
+    // Si preferís traer ya filtrado desde backend, descomentá esto:
+    // const esp = Number(this.especialidad_id);
+    // this.agendarService.getMedicos(esp).subscribe({
+    //   next: (data) => {
+    //     this.medicos = data || [];
+    //     this.medicosFiltrados = this.medicos;
+    //     this.medico_id = '';
+    //   },
+    //   error: () => { this.medicos = []; this.medicosFiltrados = []; this.medico_id = ''; }
+    // });
+
+    // Filtrado en cliente (rápido y suficiente):
+    this.filtrarMedicos();
+    if (this.medico_id && !this.medicosFiltrados.some(m => m.id == this.medico_id)) {
+      this.medico_id = '';
+    }
+  }
+
+  filtrarMedicos() {
+    const esp = Number(this.especialidad_id);
+    this.medicosFiltrados = esp
+      ? this.medicos.filter(m => Number(m.especialidad_id) === esp)
+      : this.medicos;
   }
 
   agendar() {
     this.cargando = true;
     this.mensaje = '';
-    const user = localStorage.getItem('user');
-    const paciente_id = user ? JSON.parse(user).id : null;
+
+    const userRaw = localStorage.getItem('user');
+    const paciente_id = userRaw ? JSON.parse(userRaw).id : null;
+
+    // Backend espera "YYYY-MM-DD HH:mm:00"
+    const fecha_hora = (this.fecha && this.hora) ? `${this.fecha} ${this.hora}:00` : '';
+
     const turno = {
-      motivo: this.motivo,
-      fecha_hora: this.fecha + 'T' + this.hora,
-      paciente_id,
-      medico_id: this.medico_id,
-      especialidad_id: this.especialidad_id
+      motivo: this.motivo || undefined,
+      fecha_hora,
+      paciente_id,                         // si en backend lo inferís por token, podés omitirlo
+      medico_id: Number(this.medico_id),
+      especialidad_id: Number(this.especialidad_id),
+      estado: 'pendiente'
     };
+
     this.turnosService.agendarTurno(turno).subscribe({
       next: () => {
         this.mensaje = 'Turno agendado correctamente.';
         this.cargando = false;
+        // Opcional: resetear formulario
+        // this.motivo=''; this.fecha=''; this.hora=''; this.medico_id=''; this.especialidad_id='';
       },
-      error: () => {
-        this.mensaje = 'Error al agendar turno.';
+      error: (err) => {
+        this.mensaje = err?.error?.message || 'Error al agendar turno.';
         this.cargando = false;
       }
     });
