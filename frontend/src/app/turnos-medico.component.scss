@@ -1,54 +1,147 @@
 /* Contenedor general */
 .turnos-medico-container {
-  max-width: 980px;
+  max-width: 1200px;
   margin: 2rem auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
-  padding: 2.5rem 2rem 2rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 0;
+  overflow: hidden;
 }
 
-h2 {
+/* Header Section */
+.header-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
   text-align: center;
-  margin-bottom: 1.2rem;
-  color: #2a3a5e;
-  font-size: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+  .header-icon {
+    display: inline-block;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    color: white;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  }
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: #2d3748;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-subtitle {
+    color: #718096;
+    font-size: 1.1rem;
+    margin: 0;
+  }
 }
 
-/* Filtros de estado (chips) */
+/* Error Banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #fc8181, #f56565);
+  color: white;
+  padding: 1rem 2rem;
+  margin: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+}
+
+/* Filtros Section */
+.filtros-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  margin: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+
+  .filtros-title {
+    margin: 0 0 1.5rem 0;
+    color: #2d3748;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
+/* Filtros de estado (chips mejorados) */
 .estado-filtros {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 1rem;
 
-  button {
-    border: 1px solid #e5e7eb;
-    background: #f8fafc;
-    color: #1f2937;
-    padding: 0.45rem 0.8rem;
-    border-radius: 999px;
+  .filtro-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    color: #4a5568;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
-    &.active, &:hover {
-      background: #4f8cff;
-      border-color: #4f8cff;
-      color: #fff;
+    .filtro-icon {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+      transform: translateY(-2px);
+    }
+
+    // Estados específicos
+    &.filtro-pendiente.active {
+      background: linear-gradient(135deg, #f6ad55, #ed8936);
+    }
+    
+    &.filtro-confirmado.active {
+      background: linear-gradient(135deg, #68d391, #38a169);
+    }
+    
+    &.filtro-cancelado.active {
+      background: linear-gradient(135deg, #fc8181, #e53e3e);
+    }
+    
+    &.filtro-atendido.active {
+      background: linear-gradient(135deg, #9f7aea, #805ad5);
     }
   }
 }
 
 /* -------- Calendario (mes) -------- */
 .calendario-container {
-  max-width: 560px;
-  margin: 1rem auto 2rem auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
-  padding: 1.5rem 1.2rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 2rem;
 }
 
 .calendario-header-bar {
@@ -148,102 +241,342 @@ h2 {
 
 /* -------- Agenda del día -------- */
 .calendario-agenda {
-  margin-top: 1rem;
-  background: #f8fafc;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.05);
+  margin: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 
-  h3 {
-    margin: 0 0 1rem 0;
-    color: #2a3a5e;
-    font-weight: 700;
+  .agenda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+
+    .agenda-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      svg {
+        color: #667eea;
+      }
+
+      h3 {
+        margin: 0;
+        color: #2d3748;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+    }
+
+    .turnos-count {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
   }
 }
 
-.turnos-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 1px 6px 0 rgba(0,0,0,0.06);
+/* Grid de Turnos */
+.turnos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
 
-  th, td {
-    padding: 0.8rem 1rem;
-    text-align: left;
-    white-space: nowrap;
+.turno-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-left: 4px solid #e2e8f0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   }
 
-  th {
-    background: #eaf1fb;
-    color: #2a3a5e;
-    font-weight: 700;
-    border-bottom: 2px solid #d1d5db;
-    font-size: 0.95rem;
+  &[data-estado="pendiente"] {
+    border-left-color: #f6ad55;
+    &:hover { box-shadow: 0 8px 25px rgba(246, 173, 85, 0.3); }
   }
 
-  td {
-    font-size: 0.95rem;
-    color: #233048;
+  &[data-estado="confirmado"] {
+    border-left-color: #68d391;
+    &:hover { box-shadow: 0 8px 25px rgba(104, 211, 145, 0.3); }
   }
 
-  tr:not(:last-child) td {
-    border-bottom: 1px solid #eef2f7;
+  &[data-estado="cancelado"] {
+    border-left-color: #fc8181;
+    &:hover { box-shadow: 0 8px 25px rgba(252, 129, 129, 0.3); }
   }
 
-  tr:hover {
-    background: #f6faff;
+  &[data-estado="atendido"] {
+    border-left-color: #9f7aea;
+    &:hover { box-shadow: 0 8px 25px rgba(159, 122, 234, 0.3); }
   }
 
-  .estado-cell[data-estado="pendiente"]  { color: #b45309; }
-  .estado-cell[data-estado="confirmado"] { color: #047857; }
-  .estado-cell[data-estado="cancelado"]  { color: #b91c1c; }
-  .estado-cell[data-estado="atendido"]   { color: #4338ca; }
+  .turno-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .turno-hora {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2d3748;
+
+      svg {
+        color: #667eea;
+      }
+    }
+
+    .turno-estado {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+
+      &[data-estado="pendiente"] {
+        background: rgba(246, 173, 85, 0.2);
+        color: #c05621;
+      }
+
+      &[data-estado="confirmado"] {
+        background: rgba(104, 211, 145, 0.2);
+        color: #276749;
+      }
+
+      &[data-estado="cancelado"] {
+        background: rgba(252, 129, 129, 0.2);
+        color: #c53030;
+      }
+
+      &[data-estado="atendido"] {
+        background: rgba(159, 122, 234, 0.2);
+        color: #553c9a;
+      }
+    }
+  }
+
+  .turno-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .info-label {
+        font-size: 0.9rem;
+        color: #718096;
+        min-width: 120px;
+      }
+
+      .info-value {
+        font-weight: 600;
+        color: #2d3748;
+        text-align: right;
+      }
+    }
+  }
+}
+
+/* No hay turnos */
+.no-turnos-card {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #718096;
+
+  svg {
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+  }
+
+  h4 {
+    margin: 0 0 0.5rem 0;
+    color: #4a5568;
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
 }
 
 /* -------- Próximos turnos -------- */
-.proximos {
-  margin-top: 1.5rem;
+.proximos-section {
+  margin: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 
-  h3 {
-    color: #2a3a5e;
-    margin: 0 0 0.8rem 0;
-    font-weight: 700;
-  }
+  .proximos-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      display: grid;
-      grid-template-columns: 110px 1fr 1fr 110px;
-      gap: 8px;
-      align-items: center;
-      padding: 0.6rem 0.8rem;
-      border-bottom: 1px solid #eef2f7;
-
-      .pr-fecha { font-weight: 700; color: #1f2937; }
-      .pr-pac   { color: #111827; }
-      .pr-esp   { color: #374151; font-size: 0.95rem; }
-      .pr-estado {
-        text-transform: capitalize;
-        justify-self: end;
-      }
-
-      .pr-estado[data-estado="pendiente"]  { color: #b45309; }
-      .pr-estado[data-estado="confirmado"] { color: #047857; }
-      .pr-estado[data-estado="cancelado"]  { color: #b91c1c; }
-      .pr-estado[data-estado="atendido"]   { color: #4338ca; }
+    svg {
+      color: #667eea;
     }
 
-    li:last-child { border-bottom: none; }
+    h3 {
+      margin: 0;
+      color: #2d3748;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
   }
 }
 
-/* Estados y mensajes */
+.no-proximos {
+  text-align: center;
+  padding: 3rem 2rem;
+
+  .no-proximos-content {
+    svg {
+      color: #cbd5e0;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      margin: 0 0 0.5rem 0;
+      color: #4a5568;
+      font-size: 1.3rem;
+    }
+
+    p {
+      margin: 0;
+      color: #718096;
+      font-size: 1rem;
+    }
+  }
+}
+
+.proximos-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.proximo-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid #e2e8f0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+
+  &[data-estado="pendiente"] { border-left-color: #f6ad55; }
+  &[data-estado="confirmado"] { border-left-color: #68d391; }
+  &[data-estado="cancelado"] { border-left-color: #fc8181; }
+  &[data-estado="atendido"] { border-left-color: #9f7aea; }
+
+  .proximo-fecha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+
+    .fecha-dia {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .fecha-mes {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 2px 0;
+    }
+
+    .fecha-hora {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+  }
+
+  .proximo-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .paciente-info {
+      font-size: 1.1rem;
+      color: #2d3748;
+    }
+
+    .especialidad-info {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    .estado-badge {
+      align-self: flex-start;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+
+      &[data-estado="pendiente"] {
+        background: rgba(246, 173, 85, 0.2);
+        color: #c05621;
+      }
+
+      &[data-estado="confirmado"] {
+        background: rgba(104, 211, 145, 0.2);
+        color: #276749;
+      }
+
+      &[data-estado="cancelado"] {
+        background: rgba(252, 129, 129, 0.2);
+        color: #c53030;
+      }
+
+      &[data-estado="atendido"] {
+        background: rgba(159, 122, 234, 0.2);
+        color: #553c9a;
+      }
+    }
+  }
+}
+
+/* Estados y mensajes generales */
 .error {
   color: #e74c3c;
   text-align: center;
@@ -251,40 +584,265 @@ h2 {
   font-weight: 600;
 }
 
-.no-turnos {
-  text-align: center;
-  color: #6b7280;
-  margin-top: 1.2rem;
-  font-size: 1.05rem;
-}
-
 /* -------- Responsivo -------- */
-@media (max-width: 720px) {
-  .proximos ul li {
-    grid-template-columns: 90px 1fr;
-    grid-auto-rows: auto;
-    grid-row-gap: 4px;
+@media (max-width: 768px) {
+  .turnos-medico-container {
+    margin: 1rem;
+  }
 
-    .pr-esp, .pr-estado { justify-self: start; }
+  .header-section {
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .filtros-section,
+  .calendario-agenda,
+  .proximos-section {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .turnos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .proximo-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+
+    .proximo-info {
+      align-items: center;
+
+      .estado-badge {
+        align-self: center;
+      }
+    }
   }
 }
 
 @media (max-width: 640px) {
-  .turnos-medico-container {
-    padding: 1.5rem 1rem;
-  }
-
   .calendario-container {
-    padding: 1.2rem 1rem;
+    margin: 1rem;
+    padding: 1.5rem;
   }
 
-  .calendario-day {
-    font-size: 1rem;
-    padding: 0.6rem 0;
-  }
+  .filtros-section .estado-filtros {
+    gap: 8px;
 
-  .turnos-table th, .turnos-table td {
-    padding: 0.6rem 0.7rem;
-    font-size: 0.9rem;
+    .filtro-btn {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* ========== BOTONES DE CANCELAR TURNOS ========== */
+.turno-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+
+  .btn-cancelar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+
+    &:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* Botón cancelar para próximos turnos (más pequeño) */
+.proximo-acciones {
+  display: flex;
+  align-items: center;
+
+  .btn-cancelar-small {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+
+    &:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+}
+
+/* Ajustar layout de próximos turnos para incluir botón */
+.proximo-card {
+  justify-content: space-between;
+}
+
+.proximo-card .proximo-info {
+  flex: 1;
+}
+
+/* ========== MODAL DE CONFIRMACIÓN ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+  
+  .modal-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    
+    svg {
+      margin-bottom: 1rem;
+    }
+    
+    h3 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+  }
+  
+  .modal-body {
+    text-align: center;
+    margin-bottom: 2rem;
+    
+    p {
+      margin: 0 0 0.5rem 0;
+      color: #475569;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      
+      strong {
+        color: #1e293b;
+        font-weight: 600;
+      }
+    }
+    
+    .modal-warning {
+      color: #ef4444;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+      justify-content: center;
+    }
+    
+    .btn-modal-no {
+      background: #f1f5f9;
+      color: #64748b;
+      
+      &:hover {
+        background: #e2e8f0;
+        color: #475569;
+        transform: translateY(-1px);
+      }
+    }
+    
+    .btn-modal-si {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      
+      &:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+      }
+    }
+  }
+}
+
+/* Animaciones del modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

@@ -26,6 +26,11 @@ export class TurnosMedicoComponent implements OnInit {
   currentYear = this.today.getFullYear();
   selectedDate: Date | null = null;
 
+  // Variables para el modal de confirmación
+  mostrarModalCancelar = false;
+  turnoACancelar: any = null;
+  fechaTurnoACancelar = '';
+
   // Índices por día (YYYY-MM-DD) -> array turnos filtrados
   private indexPorDia: Record<string, any[]> = {};
 
@@ -169,5 +174,43 @@ export class TurnosMedicoComponent implements OnInit {
       .filter(t => (t.fecha_hora || '').slice(0, 10) >= hoyIso)
       .sort((a, b) => (a.fecha_hora < b.fecha_hora ? -1 : 1));
     return todos.slice(0, max);
+  }
+
+  // Cancelar turno (mostrar modal de confirmación)
+  cancelarTurno(turno: any) {
+    this.turnoACancelar = turno;
+    this.fechaTurnoACancelar = this.datePipe.transform(turno.fecha_hora, 'dd/MM/yyyy HH:mm') || '';
+    this.mostrarModalCancelar = true;
+  }
+
+  // Cerrar modal de confirmación
+  cerrarModal() {
+    this.mostrarModalCancelar = false;
+    this.turnoACancelar = null;
+    this.fechaTurnoACancelar = '';
+  }
+
+  // Confirmar cancelación (eliminar turno)
+  confirmarCancelacion() {
+    if (this.turnoACancelar) {
+      this.turnosService.eliminarTurno(this.turnoACancelar.id).subscribe({
+        next: (response) => {
+          // Eliminar el turno del array local
+          const index = this.turnos.findIndex(t => t.id === this.turnoACancelar.id);
+          if (index > -1) {
+            this.turnos.splice(index, 1);
+          }
+          // Reindexar para actualizar la vista
+          this.reindexar();
+          console.log('Turno eliminado exitosamente');
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error('Error al eliminar turno:', error);
+          this.error = 'Error al cancelar el turno. Intenta nuevamente.';
+          this.cerrarModal();
+        }
+      });
+    }
   }
 }
