@@ -37,5 +37,7 @@ Route::middleware(['auth:sanctum', 'role:administrador,secretario,medico,pacient
     Route::apiResource('turnos', TurnoController::class);
 });
 
+Route::put('/turnos/{id}/reprogramar', [TurnoController::class, 'reprogramar']);
+
 
 

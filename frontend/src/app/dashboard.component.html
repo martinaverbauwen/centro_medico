@@ -83,34 +83,120 @@
         <h2>¿Deseas agendar un turno?</h2>
         <button class="agendar-btn" (click)="agendarTurno()">Agendar nuevo turno</button>
       </div>
-      <div class="dashboard-card pro" style="margin-bottom:2rem;">
-        <h2>Mis turnos</h2>
-        <div *ngIf="cargandoTurnos">Cargando turnos...</div>
-        <div *ngIf="errorTurnos">{{ errorTurnos }}</div>
-        <table class="turnos-table" *ngIf="turnos.length">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Médico</th>
-              <th>Especialidad</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let turno of turnos">
-              <td>{{ turno.fecha_hora | date:'dd/MM/yyyy' }}</td>
-              <td>{{ turno.fecha_hora | date:'HH:mm' }}</td>
-              <td>{{ turno.medico?.nombre }} {{ turno.medico?.apellido }}</td>
-              <td>{{ turno.especialidad?.nombre }}</td>
-              <td>{{ turno.estado }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div *ngIf="!turnos.length && !cargandoTurnos">No tienes turnos agendados.</div>
+      <div class="mis-turnos-paciente">
+        <div class="turnos-header">
+          <div class="header-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" fill="currentColor"/>
+            </svg>
+            <h2>Mis turnos</h2>
+          </div>
+          <span class="turnos-count" *ngIf="turnos.length">{{ turnos.length }} turno(s)</span>
+        </div>
+
+        <div *ngIf="cargandoTurnos" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Cargando turnos...</p>
+        </div>
+
+        <div *ngIf="errorTurnos" class="error-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+          </svg>
+          <h3>Error al cargar turnos</h3>
+          <p>{{ errorTurnos }}</p>
+        </div>
+
+        <div class="turnos-grid" *ngIf="turnos.length && !cargandoTurnos">
+          <div class="turno-card-paciente" *ngFor="let turno of turnos" [attr.data-estado]="turno.estado">
+            <div class="turno-fecha-badge">
+              <div class="fecha-dia">{{ turno.fecha_hora | date:'dd' }}</div>
+              <div class="fecha-mes">{{ turno.fecha_hora | date:'MMM' | uppercase }}</div>
+            </div>
+            
+            <div class="turno-detalles">
+              <div class="turno-hora">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
+                  <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/>
+                </svg>
+                {{ turno.fecha_hora | date:'HH:mm' }}
+              </div>
+              
+              <div class="medico-info">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" fill="currentColor"/>
+                </svg>
+                <strong>Dr. {{ turno.medico?.nombre }} {{ turno.medico?.apellido }}</strong>
+              </div>
+              
+              <div class="especialidad-info">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="currentColor"/>
+                </svg>
+                {{ turno.especialidad?.nombre }}
+              </div>
+            </div>
+
+            <div class="turno-estado" [attr.data-estado]="turno.estado">
+              <span class="estado-badge">{{ turno.estado }}</span>
+            </div>
+
+            <!-- Botón cancelar para pacientes -->
+            <div class="turno-acciones-paciente" *ngIf="turno.estado !== 'atendido'">
+              <button class="btn-cancelar-paciente" (click)="cancelarTurno(turno)" title="Cancelar turno">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+                </svg>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!turnos.length && !cargandoTurnos && !errorTurnos" class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z" fill="currentColor"/>
+          </svg>
+          <h3>No tienes turnos agendados</h3>
+          <p>¡Agenda tu primera cita médica!</p>
+          <button class="agendar-btn-small" (click)="agendarTurno()">Agendar turno</button>
+        </div>
       </div>
     </div>
     <!-- Tarjetas duplicadas eliminadas, cada rol tiene su sección arriba -->
     <router-outlet></router-outlet>
   </main>
+
+  <!-- Modal de confirmación para cancelar turno -->
+  <div class="modal-overlay" *ngIf="mostrarModalCancelar" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#ef4444"/>
+        </svg>
+        <h3>¿Estás seguro?</h3>
+      </div>
+      
+      <div class="modal-body">
+        <p>¿Quieres cancelar el turno del <strong>{{ fechaTurnoACancelar }}</strong>?</p>
+        <p class="modal-warning">Esta acción no se puede deshacer.</p>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn-modal-no" (click)="cerrarModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+          </svg>
+          NO
+        </button>
+        <button class="btn-modal-si" (click)="confirmarCancelacion()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+          </svg>
+          SÍ, Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

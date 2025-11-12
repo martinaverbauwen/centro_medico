@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Turno;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -253,4 +254,54 @@ class TurnoController extends Controller
         $turno->delete();
         return response()->json(['message'=>'Turno eliminado']);
     }
+
+    public function reprogramar(Request $request, $id)
+    {
+        try {
+            $turno = Turno::findOrFail($id);
+
+            // 1) Validación
+            $validated = $request->validate([
+                'fecha' => 'required|date',            // '2025-11-21'
+                'hora'  => 'required|date_format:H:i', // '17:00'
+            ]);
+
+            // 2) Unificar a DATETIME para tu columna fecha_hora
+            //    (ajustá timezone si usás otra; por defecto usa app.timezone)
+            $nuevaFechaHora = Carbon::createFromFormat('Y-m-d H:i', $validated['fecha'].' '.$validated['hora'])
+                                    ->seconds(0);
+
+            // 3) Chequear conflicto con otro turno del mismo médico en ese DATETIME
+            $existeConflicto = Turno::where('medico_id', $turno->medico_id)
+                ->where('fecha_hora', $nuevaFechaHora)   // <-- comparar directo contra la columna real
+                ->where('id', '!=', $turno->id)
+                ->exists();
+
+            if ($existeConflicto) {
+                return response()->json([
+                    'message' => 'El médico ya tiene un turno en esa fecha y hora.'
+                ], 409);
+            }
+
+            // (Opcional) Reglas de negocio: no permitir reprogramar turnos pasados
+            // if ($nuevaFechaHora->isPast()) {
+            //     return response()->json(['message' => 'No se puede reprogramar a una fecha pasada.'], 422);
+            // }
+
+            // 4) Actualizar
+            $turno->fecha_hora = $nuevaFechaHora;
+            $turno->save();
+
+            return response()->json([
+                'message' => 'Turno reprogramado correctamente',
+                'turno'   => $turno
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al reprogramar turno: '.$e->getMessage()], 500);
+        }
+    }
+
 }

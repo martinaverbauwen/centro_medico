@@ -48,4 +48,23 @@ export class TurnosMedicoService {
   agendarTurno(turno: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, turno, { headers: this.authHeaders() });
   }
+
+  /**
+   * Cancelar turno (cambiar estado a 'cancelado').
+   */
+  cancelarTurno(turnoId: number): Observable<any> {
+    const data = { estado: 'cancelado' };
+    return this.http.put<any>(`${this.apiUrl}/${turnoId}`, data, { headers: this.authHeaders() });
+  }
+
+  /**
+   * Eliminar turno definitivamente.
+   */
+  eliminarTurno(turnoId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${turnoId}`, { headers: this.authHeaders() });
+  }
+
+  reprogramarTurno(id: number, data: { fecha: string; hora: string }) {
+    return this.http.put(`${this.apiUrl}/${id}/reprogramar`, data);
+  }
 }
