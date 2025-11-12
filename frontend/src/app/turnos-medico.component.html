@@ -20,21 +20,11 @@
   <div class="filtros-section">
     <h3 class="filtros-title">Filtrar por estado</h3>
     <div class="estado-filtros">
-      <button [class.active]="filtroEstado==='todos'" (click)="setFiltro('todos')" class="filtro-btn filtro-todos">
-        Todos
-      </button>
-      <button [class.active]="filtroEstado==='pendiente'" (click)="setFiltro('pendiente')" class="filtro-btn filtro-pendiente">
-        Pendientes
-      </button>
-      <button [class.active]="filtroEstado==='confirmado'" (click)="setFiltro('confirmado')" class="filtro-btn filtro-confirmado">
-        Confirmados
-      </button>
-      <button [class.active]="filtroEstado==='cancelado'" (click)="setFiltro('cancelado')" class="filtro-btn filtro-cancelado">
-        Cancelados
-      </button>
-      <button [class.active]="filtroEstado==='atendido'" (click)="setFiltro('atendido')" class="filtro-btn filtro-atendido">
-        Atendidos
-      </button>
+      <button [class.active]="filtroEstado==='todos'" (click)="setFiltro('todos')" class="filtro-btn filtro-todos">Todos</button>
+      <button [class.active]="filtroEstado==='pendiente'" (click)="setFiltro('pendiente')" class="filtro-btn filtro-pendiente">Pendientes</button>
+      <button [class.active]="filtroEstado==='confirmado'" (click)="setFiltro('confirmado')" class="filtro-btn filtro-confirmado">Confirmados</button>
+      <button [class.active]="filtroEstado==='cancelado'" (click)="setFiltro('cancelado')" class="filtro-btn filtro-cancelado">Cancelados</button>
+      <button [class.active]="filtroEstado==='atendido'" (click)="setFiltro('atendido')" class="filtro-btn filtro-atendido">Atendidos</button>
     </div>
   </div>
 
@@ -48,8 +38,6 @@
 
     <div class="calendario-grid">
       <div class="calendario-day calendario-header" *ngFor="let d of ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']">{{ d }}</div>
-
-      <!-- espacios vacíos -->
       <div *ngFor="let empty of [].constructor(firstDayOfWeek)"></div>
 
       <!-- días del mes -->
@@ -60,8 +48,6 @@
         (click)="selectDay(i+1)"
         [title]="previewDia(i+1)">
         <span class="cal-dia">{{ i+1 }}</span>
-
-        <!-- badge con cantidad de turnos -->
         <span class="cal-badge" *ngIf="countDia(i+1) > 0">{{ countDia(i+1) }}</span>
       </div>
     </div>
@@ -91,7 +77,7 @@
           </div>
           <span class="turno-estado" [attr.data-estado]="turno.estado">{{ turno.estado }}</span>
         </div>
-        
+
         <div class="turno-info">
           <div class="info-item">
             <span class="info-label">👤 Paciente:</span>
@@ -115,6 +101,9 @@
             </svg>
             Cancelar
           </button>
+          <button class="btn-reprogramar" (click)="abrirModalReprogramar(turno)" title="Reprogramar turno">
+            Reprogramar
+          </button>
         </div>
       </div>
     </div>
@@ -136,7 +125,7 @@
       </svg>
       <h3>Próximos turnos</h3>
     </div>
-    
+
     <div *ngIf="!proximosTurnos().length" class="no-proximos">
       <div class="no-proximos-content">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +136,7 @@
         <p>Tu agenda está libre por el momento.</p>
       </div>
     </div>
-    
+
     <div class="proximos-grid" *ngIf="proximosTurnos().length">
       <div class="proximo-card" *ngFor="let t of proximosTurnos()" [attr.data-estado]="t.estado">
         <div class="proximo-fecha">
@@ -155,32 +144,29 @@
           <div class="fecha-mes">{{ t.fecha_hora | date:'MMM' | uppercase }}</div>
           <div class="fecha-hora">{{ t.fecha_hora | date:'HH:mm' }}</div>
         </div>
-        
+
         <div class="proximo-info">
           <div class="paciente-info">
             <strong>{{ t.paciente?.apellido }}, {{ t.paciente?.nombre }}</strong>
           </div>
-          <div class="especialidad-info">
-            🏥 {{ t.especialidad?.nombre }}
-          </div>
-          <div class="estado-badge" [attr.data-estado]="t.estado">
-            {{ t.estado }}
-          </div>
+          <div class="especialidad-info">🏥 {{ t.especialidad?.nombre }}</div>
+          <div class="estado-badge" [attr.data-estado]="t.estado">{{ t.estado }}</div>
         </div>
 
-        <!-- Botón cancelar para próximos turnos -->
+        <!-- Acciones próximos turnos -->
         <div class="proximo-acciones" *ngIf="t.estado !== 'atendido'">
           <button class="btn-cancelar-small" (click)="cancelarTurno(t)" title="Cancelar turno">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
             </svg>
           </button>
+          <button class="btn-reprogramar-small" (click)="abrirModalReprogramar(t)" title="Reprogramar turno">⟳</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal de confirmación para cancelar turno -->
+  <!-- Modal cancelar -->
   <div class="modal-overlay" *ngIf="mostrarModalCancelar" (click)="cerrarModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -189,12 +175,12 @@
         </svg>
         <h3>¿Estás seguro?</h3>
       </div>
-      
+
       <div class="modal-body">
         <p>¿Quieres cancelar el turno del <strong>{{ fechaTurnoACancelar }}</strong>?</p>
         <p class="modal-warning">Esta acción no se puede deshacer.</p>
       </div>
-      
+
       <div class="modal-actions">
         <button class="btn-modal-no" (click)="cerrarModal()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -208,6 +194,41 @@
           </svg>
           SÍ, Cancelar
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal reprogramación -->
+  <div class="modal-overlay" *ngIf="mostrarModalReprogramar" (click)="cerrarModalReprogramar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Reprogramar turno</h3>
+        <button class="btn-close-x" (click)="cerrarModalReprogramar()" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-control">
+            <label for="rep-fecha">Nueva fecha</label>
+            <input id="rep-fecha" type="date" [(ngModel)]="formReprog.fecha" name="repFecha" />
+          </div>
+
+          <div class="form-control">
+            <label for="rep-hora">Nueva hora</label>
+            <input id="rep-hora" type="time" [(ngModel)]="formReprog.hora" name="repHora" />
+          </div>
+        </div>
+
+        <div class="ayuda-hint" *ngIf="turnoAReprogramar">
+          Reprogramando el turno de
+          <strong>{{ turnoAReprogramar?.paciente?.apellido }}, {{ turnoAReprogramar?.paciente?.nombre }}</strong>
+          ({{ turnoAReprogramar?.fecha_hora | date:'dd/MM/yyyy HH:mm' }}).
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal-no" (click)="cerrarModalReprogramar()">Cancelar</button>
+        <button class="btn-modal-si" (click)="guardarReprogramacion()">Guardar</button>
       </div>
     </div>
   </div>

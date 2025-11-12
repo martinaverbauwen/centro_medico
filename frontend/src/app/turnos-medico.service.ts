@@ -63,4 +63,8 @@ export class TurnosMedicoService {
   eliminarTurno(turnoId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${turnoId}`, { headers: this.authHeaders() });
   }
+
+  reprogramarTurno(id: number, data: { fecha: string; hora: string }) {
+    return this.http.put(`${this.apiUrl}/${id}/reprogramar`, data);
+  }
 }

@@ -31,6 +31,11 @@ export class TurnosMedicoComponent implements OnInit {
   turnoACancelar: any = null;
   fechaTurnoACancelar = '';
 
+  // Variables para el modal de reprogramación
+  mostrarModalReprogramar = false;
+  turnoAReprogramar: any = null;
+  formReprog = { fecha: '', hora: '' };
+
   // Índices por día (YYYY-MM-DD) -> array turnos filtrados
   private indexPorDia: Record<string, any[]> = {};
 
@@ -212,5 +217,44 @@ export class TurnosMedicoComponent implements OnInit {
         }
       });
     }
+  }
+
+  abrirModalReprogramar(turno: any) {
+    this.turnoAReprogramar = turno;
+    // Pre-cargar fecha y hora desde turno.fecha_hora (Date/ISO)
+    const d = new Date(turno.fecha_hora);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+
+    this.formReprog.fecha = `${yyyy}-${mm}-${dd}`;
+    this.formReprog.hora  = `${hh}:${mi}`;
+    this.mostrarModalReprogramar = true;
+  }
+
+  cerrarModalReprogramar() {
+    this.mostrarModalReprogramar = false;
+    this.turnoAReprogramar = null;
+  }
+
+  guardarReprogramacion() {
+    if (!this.turnoAReprogramar) return;
+
+    const payload = { fecha: this.formReprog.fecha, hora: this.formReprog.hora };
+
+    this.turnosService.reprogramarTurno(this.turnoAReprogramar.id, payload).subscribe({
+      next: () => {
+        // feedback simple
+        // podés reemplazar por tu toas/snackbar si lo tenés
+        alert('Turno reprogramado correctamente');
+        this.cerrarModalReprogramar();
+        this.cargarTurnosMes(); // ya la tenés para refrescar
+      },
+      error: (err) => {
+        alert(err?.error?.message || 'Error al reprogramar el turno');
+      }
+    });
   }
 }

@@ -648,6 +648,7 @@
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #f1f5f9;
+  gap: 5px;
 
   .btn-cancelar {
     display: flex;
@@ -684,6 +685,7 @@
 .proximo-acciones {
   display: flex;
   align-items: center;
+  gap: 4px;
 
   .btn-cancelar-small {
     background: linear-gradient(135deg, #ef4444, #dc2626);
@@ -845,4 +847,83 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* +++ Estilos para el modal de reprogramación +++ */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .btn-close-x {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .7;
+    &:hover { opacity: 1; }
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: .9rem;
+    color: var(--muted, #6b7280);
+  }
+
+  input[type="date"],
+  input[type="time"] {
+    padding: 10px 12px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+  }
+}
+
+.ayuda-hint {
+  margin-top: 10px;
+  font-size: .9rem;
+  color: var(--muted, #6b7280);
+}
+
+/* Botones reprogramar (coherentes con los de cancelar) */
+.btn-reprogramar,
+.btn-reprogramar-small {
+  background: #f59e0b; /* amber */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-reprogramar {
+  padding: 10px 14px;
+}
+
+.btn-reprogramar-small {
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
 }
