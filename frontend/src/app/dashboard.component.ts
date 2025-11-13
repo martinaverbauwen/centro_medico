@@ -49,8 +49,10 @@ export class DashboardComponent {
   }
   get userRole(): string {
     if (!this.user) return '';
-    return this.user.rol?.nombre || '';
+    // rol es un string ("medico", "paciente", etc.)
+    return (this.user.rol || '').toLowerCase();
   }
+
 
   logout() {
     this.auth.logout();
@@ -63,7 +65,7 @@ export class DashboardComponent {
 
   cargarTurnosUsuario() {
     if (!this.user || !this.user.id) return;
-    const rol = this.user.rol?.nombre;
+    const rol = this.user.rol;
     if (rol === 'paciente' || rol === 'cliente' || rol === 'Paciente') {
       this.cargandoTurnos = true;
       this.http.get<any>(`http://localhost:8000/api/turnos?paciente_id=${this.user.id}`).subscribe({

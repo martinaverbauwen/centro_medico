@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -23,14 +22,17 @@ export class LoginComponent {
   login() {
     this.loading = true;
     this.error = '';
+
     this.auth.login(this.email, this.password).subscribe({
-      next: (res) => {
-        console.log('Login response:', res);
-        this.auth.setToken(res.token);
-        this.auth.setUser(res.usuario);
+      // el servicio devuelve el usuario normalizado
+      next: (user) => {
+        console.log('Usuario logueado:', user);
+
+        // siempre ir a la página principal
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
+        console.error('Error login:', err);
         this.error = err.error?.message || 'Error de autenticación';
         this.loading = false;
       },
