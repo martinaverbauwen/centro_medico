@@ -1,0 +1,491 @@
+.agenda-medicos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(181, 183, 186, 0.25);
+  color: #0f172a;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* HEADER */
+
+.header-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 0 0, #4f46e5, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(229, 229, 229);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+}
+
+.header-text h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1b1b1b;
+}
+
+.header-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: #5c5c5c;
+}
+
+/* ERROR */
+
+.error-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+  font-size: 0.85rem;
+}
+
+/* SELECT MÉDICO */
+
+.medico-select-card {
+  background: rgba(186, 186, 186, 0.95);
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.medico-select-card label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #434343;
+}
+
+.medico-select-card select {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: #e9eff7;
+  color: #272727;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.medico-select-card select:focus {
+  border-color: #0e0966;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.6);
+}
+
+.medico-resumen {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.4rem;
+}
+
+.medico-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #f9fafb;
+}
+
+.medico-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.medico-nombre {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1c2943;
+}
+
+.medico-especialidad {
+  font-size: 0.8rem;
+  color: #4c588f;
+}
+
+/* FILTROS */
+
+.filtros-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filtros-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.estado-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filtro-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  background: rgba(65, 65, 65, 0.95);
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.filtro-btn.active {
+  border-color: #4f46e5;
+  background: radial-gradient(circle at 0 0, #4f46e5, #1d4ed8);
+}
+
+/* GRID PRINCIPAL */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* CALENDARIO */
+
+.calendario-container {
+  background: radial-gradient(circle at top left, rgba(148, 175, 234, 0.35), rgba(162, 180, 223, 0.98));
+  border-radius: 16px;
+  padding: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.calendario-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.calendario-header-bar h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #182847;
+}
+
+.calendario-arrow {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(125, 125, 125, 0.9);
+  color: #e5e7eb;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.calendario-day {
+  min-height: 42px;
+  border-radius: 12px;
+  background: rgba(41, 47, 60, 0.9);
+  border: 1px solid rgba(30, 64, 175, 0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem 0.3rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendario-day.calendario-header {
+  border: none;
+  background: transparent;
+  color: #2f2f2f;
+  text-align: center;
+  cursor: default;
+}
+
+.cal-dia {
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.cal-badge {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  background: rgba(52, 211, 153, 0.2);
+  color: #bbf7d0;
+}
+
+.calendario-day.selected {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.7);
+}
+
+/* AGENDA DEL DÍA */
+
+.calendario-agenda {
+  background: rgba(186, 186, 186, 0.95);
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.agenda-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.agenda-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.agenda-title h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #252525;
+}
+
+.turnos-count {
+  font-size: 0.8rem;
+  color: #252525;
+}
+
+/* TARJETAS DE TURNOS */
+
+.turnos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.turno-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(95, 98, 103, 0.8);
+  background: radial-gradient(circle at top left, rgba(98, 185, 220, 0.12), #131d47);
+}
+
+.turno-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.turno-hora {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #282828;
+}
+
+.turno-estado {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+/* Estados (colores) */
+.turno-card[data-estado='pendiente'] .turno-estado,
+.proximo-card[data-estado='pendiente'] .estado-badge {
+  background: rgba(234, 179, 8, 0.18);
+  border-color: rgba(234, 179, 8, 0.8);
+  color: #facc15;
+}
+
+.turno-card[data-estado='confirmado'] .turno-estado,
+.proximo-card[data-estado='confirmado'] .estado-badge {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.8);
+  color: #4ade80;
+}
+
+.turno-card[data-estado='cancelado'] .turno-estado,
+.proximo-card[data-estado='cancelado'] .estado-badge {
+  background: rgba(248, 113, 113, 0.16);
+  border-color: rgba(248, 113, 113, 0.85);
+  color: #fecaca;
+}
+
+.turno-card[data-estado='atendido'] .turno-estado,
+.proximo-card[data-estado='atendido'] .estado-badge {
+  background: rgba(129, 140, 248, 0.18);
+  border-color: rgba(129, 140, 248, 0.85);
+  color: #c7d2fe;
+}
+
+.turno-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.info-label {
+  color: #313131;
+}
+
+.info-value {
+  color: #0d1e46;
+  font-weight: 700;
+}
+
+/* ESTADO VACÍO DEL DÍA */
+
+.no-turnos-card {
+  margin-top: 0.4rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(153, 156, 159, 0.8);
+  text-align: center;
+  color: #414141;
+  font-size: 0.85rem;
+}
+
+.no-turnos-card h4 {
+  margin: 0.4rem 0 0.1rem;
+  color: #ffffff;
+}
+
+/* PRÓXIMOS TURNOS */
+
+.proximos-section {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(171, 171, 171, 0.9);
+}
+
+.proximos-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.proximos-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #2e2e2e;
+}
+
+.no-proximos {
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(75, 85, 99, 0.8);
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.no-proximos-content h4 {
+  margin: 0.4rem 0 0.1rem;
+  color: #e5e7eb;
+}
+
+.proximos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.proximo-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(111, 112, 113, 0.9);
+  background: radial-gradient(circle at top left, rgba(98, 185, 220, 0.12), #131d47);
+}
+
+.proximo-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #e5e7eb;
+}
+
+.proximo-fecha .fecha-dia {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.proximo-fecha .fecha-mes {
+  font-size: 0.7rem;
+  color: #424243;
+}
+
+.proximo-fecha .fecha-hora {
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.proximo-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.82rem;
+}
+
+.estado-badge {
+  margin-top: 0.15rem;
+  align-self: flex-start;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+}

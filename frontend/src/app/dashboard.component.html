@@ -9,15 +9,38 @@
     </div>
     <div class="sidebar-divider"></div>
     <nav class="sidebar-nav pro">
-      <a *ngIf="userRole === 'administrador'" class="nav-link active" routerLink="/usuarios"><span class="icon">👤</span><span>Usuarios</span></a>
-      <a *ngIf="userRole === 'administrador' || userRole === 'secretario' || userRole === 'medico'" class="nav-link" routerLink="/turnos-medico"><span class="icon">📅</span><span>Turnos</span></a>
-      <a *ngIf="userRole === 'paciente' || userRole === 'cliente' || userRole === 'Paciente'" class="nav-link" (click)="agendarTurno()"><span class="icon">📝</span><span>Agendar turno</span></a>
-    <!-- cierre de nav corregido -->
+      <!-- Admin: Usuarios -->
+      <a *ngIf="userRole === 'administrador'" class="nav-link" routerLink="/usuarios">
+        <span class="icon">👤</span><span>Usuarios</span>
+      </a>
+      <a *ngIf="userRole === 'administrador'" class="nav-link" routerLink="/especialidades">
+        <span class="icon">👜</span><span>Especialidades</span>
+      </a>
+
+      <!-- Admin + Secretario: Médicos -->
+      <a *ngIf="userRole === 'administrador' || userRole === 'secretario'" class="nav-link" routerLink="/medicos">
+        <span class="icon">🩺</span><span>Médicos</span>
+      </a>
+
+      <!-- Admin + Secretario + Médico: Turnos -->
+      <a *ngIf="userRole === 'administrador' || userRole === 'secretario' || userRole === 'medico'" class="nav-link" routerLink="/turnos-admin">
+        <span class="icon">📅</span><span>Turnos</span>
+      </a>
+
+      <a *ngIf="userRole === 'administrador' || userRole === 'secretario'" class="nav-link" routerLink="/agenda-medicos">
+        <span class="icon">👨‍⚕️</span><span>Agendas</span>
+      </a>
+
+      <!-- Paciente / Cliente: Agendar turno -->
+      <a *ngIf="userRole === 'paciente' || userRole === 'cliente' || userRole === 'Paciente'" class="nav-link" (click)="agendarTurno()">
+        <span class="icon">📝</span><span>Agendar turno</span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <button class="logout-btn pro" (click)="logout()">Cerrar sesión</button>
     </div>
   </aside>
+
   <main class="dashboard-main pro">
     <!-- Administrador -->
     <div *ngIf="userRole === 'administrador'">
@@ -32,11 +55,31 @@
           <p>Administra los usuarios del sistema.</p>
           <a class="card-btn" routerLink="/usuarios">Ver usuarios</a>
         </div>
+
+        <div class="dashboard-card pro">
+          <span class="card-icon">🩺</span>
+          <h2>Gestión de Médicos</h2>
+          <p>Administra los médicos y sus especialidades.</p>
+          <a class="card-btn" routerLink="/medicos">Ver médicos</a>
+        </div>
+
         <div class="dashboard-card pro">
           <span class="card-icon">📅</span>
           <h2>Gestión de Turnos</h2>
           <p>Visualiza y administra los turnos médicos.</p>
-          <a class="card-btn" routerLink="/turnos-medico">Ver turnos</a>
+          <a class="card-btn" routerLink="/turnos-admin">Ver turnos</a>
+        </div>
+          <div class="dashboard-card pro">
+            <span class="card-icon">🩺</span>
+            <h2>Gestión de Especialidades</h2>
+            <p>Administra las especialidades médicas.</p>
+            <a class="card-btn" routerLink="/especialidades">Ver especialidades</a>
+          </div>
+          <div class="dashboard-card pro">
+            <span class="card-icon">👨‍⚕️</span>
+            <h2>Agenda por Médico</h2>
+            <p>Visualiza los turnos de cada médico.</p>
+            <a class="card-btn" routerLink="/agenda-medicos">Ver agenda</a>
         </div>
       </div>
     </div>
@@ -49,10 +92,23 @@
       </div>
       <div class="dashboard-cards pro">
         <div class="dashboard-card pro">
+          <span class="card-icon">🩺</span>
+          <h2>Gestión de Médicos</h2>
+          <p>Administra el listado de médicos.</p>
+          <a class="card-btn" routerLink="/medicos">Ver médicos</a>
+        </div>
+
+        <div class="dashboard-card pro">
           <span class="card-icon">📅</span>
           <h2>Gestión de Turnos</h2>
           <p>Visualiza y administra los turnos médicos.</p>
-          <a class="card-btn" routerLink="/turnos-medico">Ver turnos</a>
+          <a class="card-btn" routerLink="//turnos-admin">Ver turnos</a>
+        </div>
+        <div class="dashboard-card pro">
+          <span class="card-icon">👨‍⚕️</span>
+          <h2>Agenda por Médico</h2>
+          <p>Visualiza los turnos de cada médico.</p>
+          <a class="card-btn" routerLink="/agenda-medicos">Ver agenda</a>
         </div>
       </div>
     </div>
@@ -142,7 +198,6 @@
               <span class="estado-badge">{{ turno.estado }}</span>
             </div>
 
-            <!-- Botón cancelar para pacientes -->
             <div class="turno-acciones-paciente" *ngIf="turno.estado !== 'atendido'">
               <button class="btn-cancelar-paciente" (click)="cancelarTurno(turno)" title="Cancelar turno">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -164,7 +219,7 @@
         </div>
       </div>
     </div>
-    <!-- Tarjetas duplicadas eliminadas, cada rol tiene su sección arriba -->
+
     <router-outlet></router-outlet>
   </main>
 

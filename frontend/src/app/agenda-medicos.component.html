@@ -1,0 +1,178 @@
+<div class="agenda-medicos-container">
+  <!-- HEADER -->
+  <div class="header-section">
+    <div class="header-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h2>Agenda de Médicos</h2>
+      <p class="header-subtitle">Selecciona un médico para visualizar su agenda</p>
+    </div>
+  </div>
+
+  <!-- ERRORES -->
+  <div *ngIf="error" class="error-banner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+    </svg>
+    {{ error }}
+  </div>
+
+  <!-- SELECT DE MEDICO -->
+  <div class="medico-select-card">
+    <label for="medicoSelect">Médico</label>
+    <select
+      id="medicoSelect"
+      [(ngModel)]="selectedMedicoId"
+      (change)="onMedicoChange()">
+      <option value="">Seleccionar médico</option>
+      <option *ngFor="let m of medicos" [value]="m.id">
+        {{ m.apellido }}, {{ m.nombre }} —
+        {{ m.especialidad?.nombre || 'Sin especialidad' }}
+      </option>
+    </select>
+
+    <div class="medico-resumen" *ngIf="selectedMedico">
+      <div class="medico-avatar">
+        {{ (selectedMedico.nombre?.[0] || '?') }}{{ (selectedMedico.apellido?.[0] || '') }}
+      </div>
+      <div class="medico-data">
+        <div class="medico-nombre">
+          {{ selectedMedico.apellido }}, {{ selectedMedico.nombre }}
+        </div>
+        <div class="medico-especialidad">
+          {{ selectedMedico.especialidad?.nombre || 'Sin especialidad asignada' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS DE ESTADO -->
+  <div class="filtros-section" *ngIf="selectedMedicoId">
+    <h3 class="filtros-title">Filtrar por estado</h3>
+    <div class="estado-filtros">
+      <button [class.active]="filtroEstado==='todos'" (click)="setFiltro('todos')" class="filtro-btn filtro-todos">Todos</button>
+      <button [class.active]="filtroEstado==='pendiente'" (click)="setFiltro('pendiente')" class="filtro-btn filtro-pendiente">Pendientes</button>
+      <button [class.active]="filtroEstado==='confirmado'" (click)="setFiltro('confirmado')" class="filtro-btn filtro-confirmado">Confirmados</button>
+      <button [class.active]="filtroEstado==='cancelado'" (click)="setFiltro('cancelado')" class="filtro-btn filtro-cancelado">Cancelados</button>
+      <button [class.active]="filtroEstado==='atendido'" (click)="setFiltro('atendido')" class="filtro-btn filtro-atendido">Atendidos</button>
+    </div>
+  </div>
+
+  <!-- CALENDARIO -->
+  <div class="content-grid" *ngIf="selectedMedicoId">
+    <div class="calendario-container">
+      <div class="calendario-header-bar">
+        <button class="calendario-arrow" (click)="cambiarMes(-1)">&#8592;</button>
+        <h3>{{ monthName | titlecase }} {{ currentYear }}</h3>
+        <button class="calendario-arrow" (click)="cambiarMes(1)">&#8594;</button>
+      </div>
+
+      <div class="calendario-grid">
+        <div class="calendario-day calendario-header" *ngFor="let d of ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']">
+          {{ d }}
+        </div>
+
+        <div *ngFor="let empty of [].constructor(firstDayOfWeek)"></div>
+
+        <div
+          *ngFor="let day of [].constructor(daysInMonth); let i = index"
+          class="calendario-day"
+          [class.selected]="selectedDate?.getDate() === i+1 && selectedDate?.getMonth() === currentMonth && selectedDate?.getFullYear() === currentYear"
+          (click)="selectDay(i+1)"
+          [title]="previewDia(i+1)">
+          <span class="cal-dia">{{ i+1 }}</span>
+          <span class="cal-badge" *ngIf="countDia(i+1) > 0">{{ countDia(i+1) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA DEL DIA -->
+    <div class="calendario-agenda">
+      <div class="agenda-header">
+        <div class="agenda-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2z" fill="currentColor"/>
+          </svg>
+          <h3>Turnos para {{ selectedDate | date:'dd/MM/yyyy' }}</h3>
+        </div>
+        <span class="turnos-count">{{ turnosDelDia().length }} turno(s)</span>
+      </div>
+
+      <div class="turnos-grid" *ngIf="turnosDelDia().length">
+        <div class="turno-card" *ngFor="let turno of turnosDelDia()" [attr.data-estado]="turno.estado">
+          <div class="turno-header">
+            <div class="turno-hora">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
+                <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/>
+              </svg>
+              {{ turno.fecha_hora | date:'HH:mm' }}
+            </div>
+            <span class="turno-estado" [attr.data-estado]="turno.estado">{{ turno.estado }}</span>
+          </div>
+
+          <div class="turno-info">
+            <div class="info-item">
+              <span class="info-label">👤 Paciente:</span>
+              <span class="info-value">{{ turno.paciente?.nombre }} {{ turno.paciente?.apellido }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">🏥 Especialidad:</span>
+              <span class="info-value">{{ turno.especialidad?.nombre }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!turnosDelDia().length" class="no-turnos-card">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" fill="currentColor"/>
+        </svg>
+        <h4>No hay turnos programados</h4>
+        <p>No hay citas para este médico en esta fecha.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROXIMOS TURNOS -->
+  <div class="proximos-section" *ngIf="selectedMedicoId">
+    <div class="proximos-header">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" fill="currentColor"/>
+      </svg>
+      <h3>Próximos turnos</h3>
+    </div>
+
+    <div *ngIf="!proximosTurnos().length" class="no-proximos">
+      <div class="no-proximos-content">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
+          <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/>
+        </svg>
+        <h4>No hay turnos próximos</h4>
+        <p>La agenda de este médico está libre por el momento.</p>
+      </div>
+    </div>
+
+    <div class="proximos-grid" *ngIf="proximosTurnos().length">
+      <div class="proximo-card" *ngFor="let t of proximosTurnos()" [attr.data-estado]="t.estado">
+        <div class="proximo-fecha">
+          <div class="fecha-dia">{{ t.fecha_hora | date:'dd' }}</div>
+          <div class="fecha-mes">{{ t.fecha_hora | date:'MMM' | uppercase }}</div>
+          <div class="fecha-hora">{{ t.fecha_hora | date:'HH:mm' }}</div>
+        </div>
+
+        <div class="proximo-info">
+          <div class="paciente-info">
+            <strong>{{ t.paciente?.apellido }}, {{ t.paciente?.nombre }}</strong>
+          </div>
+          <div class="especialidad-info">🏥 {{ t.especialidad?.nombre }}</div>
+        </div>
+        <div class="estado-badge" [attr.data-estado]="t.estado">{{ t.estado }}</div>
+      </div>
+    </div>
+  </div>
+</div>

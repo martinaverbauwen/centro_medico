@@ -18,16 +18,19 @@ export class TurnosMedicoService {
   }
 
   /**
-   * Trae turnos del médico logueado en un rango.
-   * El backend ya limita por médico si el rol es "medico".
-   * Si querés forzar un médico puntual, descomenta el set('medico_id', 'X').
+   * Trae turnos en un rango.
+   * - Si el usuario logueado es MÉDICO, el backend ya filtra por ese médico.
+   * - Si es ADMIN/SECRETARIO y pasás medicoId, filtra por ese médico.
    */
-  getTurnosRango(desde: string, hasta: string): Observable<any[]> {
+  getTurnosRango(desde: string, hasta: string, medicoId?: number): Observable<any[]> {
     let params = new HttpParams()
       .set('desde', desde)
       .set('hasta', hasta)
       .set('per_page', '500');
-      // .set('medico_id', '6'); // opcional si necesitás forzar
+
+    if (medicoId) {
+      params = params.set('medico_id', medicoId.toString());
+    }
 
     return this.http.get<any>(this.apiUrl, { headers: this.authHeaders(), params })
       .pipe(map(res => Array.isArray(res) ? res : (res?.data ?? [])));
@@ -35,7 +38,6 @@ export class TurnosMedicoService {
 
   /**
    * Compatibilidad: obtener turnos sin rango (no recomendado para vistas grandes).
-   * Mantengo este método si ya lo usabas en alguna otra parte.
    */
   getTurnos(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl, { headers: this.authHeaders() })
@@ -65,6 +67,6 @@ export class TurnosMedicoService {
   }
 
   reprogramarTurno(id: number, data: { fecha: string; hora: string }) {
-    return this.http.put(`${this.apiUrl}/${id}/reprogramar`, data);
+    return this.http.put(`${this.apiUrl}/${id}/reprogramar`, data, { headers: this.authHeaders() });
   }
 }

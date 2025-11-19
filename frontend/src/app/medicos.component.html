@@ -1,0 +1,174 @@
+<div class="medicos-page">
+  <div class="medicos-header">
+    <h1>Gestión de Médicos</h1>
+    <p class="subtitle">Administra los médicos y sus especialidades.</p>
+  </div>
+
+  <div *ngIf="error" class="error-banner">
+    {{ error }}
+  </div>
+
+  <!-- Card de alta -->
+  <div class="medicos-card" *ngIf="mostrarForm">
+    <div class="card-header">
+      <h2>Nuevo médico</h2>
+      <p>Completa los datos para registrar un nuevo profesional.</p>
+    </div>
+
+    <form (ngSubmit)="crearMedico()" #formNuevo="ngForm" class="form-grid">
+      <div class="form-control">
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="nuevoMedico.nombre" name="nombre" required />
+      </div>
+
+      <div class="form-control">
+        <label>Apellido</label>
+        <input type="text" [(ngModel)]="nuevoMedico.apellido" name="apellido" required />
+      </div>
+
+      <div class="form-control">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="nuevoMedico.email" name="email" required />
+      </div>
+
+      <div class="form-control">
+        <label>DNI</label>
+        <input type="text" [(ngModel)]="nuevoMedico.dni" name="dni" />
+      </div>
+
+      <div class="form-control">
+        <label>Teléfono</label>
+        <input type="text" [(ngModel)]="nuevoMedico.telefono" name="telefono" />
+      </div>
+
+      <div class="form-control">
+        <label>Especialidad</label>
+        <select
+          [(ngModel)]="nuevoMedico.especialidad_id"
+          name="especialidad_id"
+          required
+        >
+          <option value="" disabled selected>Selecciona una especialidad</option>
+          <option *ngFor="let esp of especialidades" [ngValue]="esp.id">
+            {{ esp.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-control">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="nuevoMedico.password"
+          name="password"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" [disabled]="formNuevo.invalid">
+          Agregar médico
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Card tabla -->
+  <div class="medicos-card">
+    <div class="card-header">
+      <h2>Listado de médicos</h2>
+      <p>Visualiza y edita los datos de los profesionales.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="medicos.length; else emptyState">
+      <table class="medicos-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>DNI</th>
+            <th>Teléfono</th>
+            <th>Especialidad</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medico of medicos">
+            <td>{{ medico.id }}</td>
+
+            <!-- Nombre -->
+            <td *ngIf="editando !== medico.id">{{ medico.nombre }}</td>
+            <td *ngIf="editando === medico.id">
+              <input [(ngModel)]="medicoEdit.nombre" name="editNombre{{ medico.id }}" />
+            </td>
+
+            <!-- Apellido -->
+            <td *ngIf="editando !== medico.id">{{ medico.apellido }}</td>
+            <td *ngIf="editando === medico.id">
+              <input [(ngModel)]="medicoEdit.apellido" name="editApellido{{ medico.id }}" />
+            </td>
+
+            <!-- Email -->
+            <td *ngIf="editando !== medico.id">{{ medico.email }}</td>
+            <td *ngIf="editando === medico.id">
+              <input [(ngModel)]="medicoEdit.email" name="editEmail{{ medico.id }}" />
+            </td>
+
+            <!-- DNI -->
+            <td *ngIf="editando !== medico.id">{{ medico.dni }}</td>
+            <td *ngIf="editando === medico.id">
+              <input [(ngModel)]="medicoEdit.dni" name="editDni{{ medico.id }}" />
+            </td>
+
+            <!-- Teléfono -->
+            <td *ngIf="editando !== medico.id">{{ medico.telefono }}</td>
+            <td *ngIf="editando === medico.id">
+              <input [(ngModel)]="medicoEdit.telefono" name="editTel{{ medico.id }}" />
+            </td>
+
+            <!-- Especialidad (nombre) -->
+            <td *ngIf="editando !== medico.id">
+              {{ medico.especialidad?.nombre || 'Sin especialidad' }}
+            </td>
+            <td *ngIf="editando === medico.id">
+              <select
+                [(ngModel)]="medicoEdit.especialidad_id"
+                name="editEsp{{ medico.id }}"
+              >
+                <option [ngValue]="''">Sin especialidad</option>
+                <option *ngFor="let esp of especialidades" [ngValue]="esp.id">
+                  {{ esp.nombre }}
+                </option>
+              </select>
+            </td>
+
+            <!-- Acciones -->
+            <td class="acciones">
+              <ng-container *ngIf="editando !== medico.id; else editarModo">
+                <button class="btn-icon btn-edit" (click)="editarMedico(medico)">
+                  Editar
+                </button>
+                <button class="btn-icon btn-delete" (click)="eliminarMedico(medico.id)">
+                  Eliminar
+                </button>
+              </ng-container>
+
+              <ng-template #editarModo>
+                <button class="btn-icon btn-edit" (click)="guardarEdicion()">Guardar</button>
+                <button class="btn-icon btn-delete" (click)="cancelarEdicion()">Cancelar</button>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <p>No hay médicos registrados aún.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
