@@ -1,0 +1,185 @@
+<div class="turnos-admin">
+  <div class="turnos-admin-header">
+    <div class="header-left">
+      <div class="icon-circle">
+        <span>📅</span>
+      </div>
+      <div>
+        <h2>Gestión de Turnos</h2>
+        <p>Administra todos los turnos de la clínica.</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert-error">
+    {{ error }}
+  </div>
+
+  <div class="turnos-admin-grid">
+    <!-- Card: alta de turno -->
+    <section class="card alta-card">
+      <h3>Agendar nuevo turno</h3>
+      <p class="card-subtitle">
+        Seleccioná paciente, médico y especialidad, y elegí fecha y hora.
+      </p>
+
+      <form (ngSubmit)="crearTurno()" #formTurno="ngForm" class="form-grid">
+        <div class="form-group">
+          <label>Paciente</label>
+          <select
+            [(ngModel)]="nuevoTurno.paciente_id"
+            name="paciente_id"
+            required
+          >
+            <option [ngValue]="''" disabled>Seleccionar paciente…</option>
+            <option
+              *ngFor="let p of pacientes"
+              [ngValue]="p.id"
+            >
+              {{ p.apellido }}, {{ p.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Médico</label>
+          <select
+            [(ngModel)]="nuevoTurno.medico_id"
+            name="medico_id"
+            required
+          >
+            <option [ngValue]="''" disabled>Seleccionar médico…</option>
+            <option
+              *ngFor="let m of medicos"
+              [ngValue]="m.id"
+            >
+              Dr/a. {{ m.apellido }} {{ m.nombre }}
+              <span *ngIf="m.especialidad?.nombre">
+                – {{ m.especialidad?.nombre }}
+              </span>
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Especialidad</label>
+          <select
+            [(ngModel)]="nuevoTurno.especialidad_id"
+            name="especialidad_id"
+            required
+          >
+            <option [ngValue]="''" disabled>Seleccionar especialidad…</option>
+            <option
+              *ngFor="let e of especialidades"
+              [ngValue]="e.id"
+            >
+              {{ e.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevoTurno.fecha"
+            name="fecha"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Hora</label>
+          <input
+            type="time"
+            [(ngModel)]="nuevoTurno.hora"
+            name="hora"
+            required
+          />
+        </div>
+
+        <div class="form-group form-full">
+          <label>Motivo (opcional)</label>
+          <textarea
+            rows="2"
+            [(ngModel)]="nuevoTurno.motivo"
+            name="motivo"
+            placeholder="Ej: Control general, estudios, etc."
+          ></textarea>
+        </div>
+
+        <div class="form-actions form-full">
+          <button
+            type="submit"
+            [disabled]="formTurno.invalid"
+            class="btn-primary"
+          >
+            Agendar turno
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Card: listado de turnos -->
+    <section class="card lista-card">
+      <div class="lista-header">
+        <div>
+          <h3>Turnos cargados</h3>
+          <p class="card-subtitle">
+            {{ turnos.length || 0 }} turno(s) registrados en el sistema.
+          </p>
+        </div>
+        <div *ngIf="loading" class="spinner-small">Cargando…</div>
+      </div>
+
+      <div class="tabla-wrapper" *ngIf="turnos.length; else sinTurnos">
+        <table class="tabla-turnos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Paciente</th>
+              <th>Médico</th>
+              <th>Especialidad</th>
+              <th>Estado</th>
+              <th class="col-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of turnos">
+              <td>{{ t.id }}</td>
+              <td>{{ t.fecha_hora | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ t.fecha_hora | date: 'HH:mm' }}</td>
+              <td>{{ nombrePaciente(t) }}</td>
+              <td>{{ nombreMedico(t) }}</td>
+              <td>{{ nombreEspecialidad(t) }}</td>
+              <td>
+                <span class="estado-pill" [attr.data-estado]="t.estado">
+                  {{ t.estado }}
+                </span>
+              </td>
+              <td class="col-acciones">
+                <button
+                  class="btn-danger-outline"
+                  (click)="eliminarTurno(t.id)"
+                  title="Eliminar turno"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #sinTurnos>
+        <div class="empty-state">
+          <div class="empty-icon">🗓️</div>
+          <h4>No hay turnos registrados</h4>
+          <p>Comienza creando un nuevo turno desde el formulario.</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</div>

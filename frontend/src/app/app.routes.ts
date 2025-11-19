@@ -6,6 +6,11 @@ import { RegisterComponent } from './register.component';
 import { UsuariosComponent } from './usuarios.component';
 import { TurnosMedicoComponent } from './turnos-medico.component';
 import { AgendarTurnoComponent } from './agendar-turno.component';
+import { MedicosComponent } from './medicos.component';
+import { TurnosAdminComponent } from './turnos-admin.component';
+import { EspecialidadesComponent } from './especialidades.component';
+import { AgendaMedicosComponent } from './agenda-medicos.component';
+
 
 import { authGuard } from './auth.guard';
 import { roleGuard } from './role.guard';
@@ -33,8 +38,28 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['administrador', 'secretario'] }
   },
+  {
+    path: 'especialidades',
+    component: EspecialidadesComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['administrador'] }
+  },
 
+
+    // turnos para administrador / secretario
+  {
+    path: 'turnos-admin',
+    component: TurnosAdminComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['administrador', 'secretario'] }
+  },
+
+  
   // solo médicos
+  { 
+    path: 'medicos',
+    component: MedicosComponent
+  },
   {
     path: 'turnos-medico',
     component: TurnosMedicoComponent,
@@ -49,6 +74,15 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['paciente', 'cliente'] }
   },
+
+  {
+    path: 'agenda-medicos',
+    component: AgendaMedicosComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['administrador', 'secretario'] }
+  },
+
+
 
   // cualquier otra ruta → login
   { path: '**', redirectTo: 'login' }

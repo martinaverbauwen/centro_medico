@@ -27,19 +27,19 @@ Route::prefix('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-// especialidades visibles sin login
 Route::get('especialidades', [EspecialidadController::class, 'index']);
+
+// CRUD solo para administrador
+Route::middleware(['auth:sanctum', 'role:administrador'])->group(function () {
+    Route::post('especialidades', [EspecialidadController::class, 'store']);           // crear
+    Route::put('especialidades/{especialidad}', [EspecialidadController::class, 'update']); // editar
+    Route::delete('especialidades/{especialidad}', [EspecialidadController::class, 'destroy']); // eliminar
+});
 
 /*
 |--------------------------------------------------------------------------
 | RUTAS SOLO AUTENTICADOS (cualquier rol)
 |--------------------------------------------------------------------------
-|
-| OJO: acá cada rol ve lo que el controlador decida.
-| Ejemplo esperado:
-|  - si es paciente → TurnoController@index devuelve SOLO sus turnos
-|  - si es médico   → devuelve sus turnos
-|  - secretario / admin → pueden ver todos
 |
 */
 Route::middleware(['auth:sanctum'])->group(function () {

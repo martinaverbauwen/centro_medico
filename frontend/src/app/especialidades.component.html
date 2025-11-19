@@ -1,0 +1,124 @@
+<div class="esp-container">
+  <div class="esp-header">
+    <div class="header-left">
+      <div class="icon-circle">
+        <span>🩺</span>
+      </div>
+      <div>
+        <h2>Gestión de Especialidades</h2>
+        <p>Administra las especialidades médicas del sistema.</p>
+      </div>
+    </div>
+    <div *ngIf="loading" class="spinner-small">Cargando…</div>
+  </div>
+
+  <div *ngIf="error" class="alert-error">
+    {{ error }}
+  </div>
+
+  <div class="esp-grid">
+    <!-- Card alta -->
+    <section class="card esp-alta-card">
+      <h3>Nueva especialidad</h3>
+      <p class="card-subtitle">Agrega una especialidad para asignar a los médicos.</p>
+
+      <form (ngSubmit)="crearEspecialidad()" #formEsp="ngForm" class="form-grid">
+        <div class="form-group form-full">
+          <label>Nombre *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevo.nombre"
+            name="nombre"
+            required
+            placeholder="Ej: Pediatría, Cardiología, Clínica Médica"
+          />
+        </div>
+
+        <div class="form-group form-full">
+          <label>Descripción (opcional)</label>
+          <textarea
+            rows="2"
+            [(ngModel)]="nuevo.descripcion"
+            name="descripcion"
+            placeholder="Breve descripción de la especialidad"
+          ></textarea>
+        </div>
+
+        <div class="form-actions form-full">
+          <button class="btn-primary" type="submit" [disabled]="formEsp.invalid">
+            Agregar especialidad
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Card listado -->
+    <section class="card esp-list-card">
+      <div class="lista-header">
+        <div>
+          <h3>Especialidades registradas</h3>
+          <p class="card-subtitle">{{ especialidades.length || 0 }} especialidad(es) en el sistema.</p>
+        </div>
+      </div>
+
+      <div class="tabla-wrapper" *ngIf="especialidades.length; else sinEspecialidades">
+        <table class="tabla-esp">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th class="col-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let esp of especialidades">
+              <td>{{ esp.id }}</td>
+
+              <td *ngIf="editandoId !== esp.id">{{ esp.nombre }}</td>
+              <td *ngIf="editandoId === esp.id">
+                <input
+                  [(ngModel)]="especialidadEdit.nombre"
+                  name="editNombre{{esp.id}}"
+                />
+              </td>
+
+              <td *ngIf="editandoId !== esp.id">
+                {{ esp.descripcion || '—' }}
+              </td>
+              <td *ngIf="editandoId === esp.id">
+                <textarea
+                  rows="1"
+                  [(ngModel)]="especialidadEdit.descripcion"
+                  name="editDesc{{esp.id}}"
+                ></textarea>
+              </td>
+
+              <td class="col-acciones">
+                <ng-container *ngIf="editandoId !== esp.id; else modoEdicion">
+                  <button class="btn-ghost" (click)="editarEspecialidad(esp)">Editar</button>
+                  <button class="btn-danger-outline" (click)="eliminarEspecialidad(esp.id)">
+                    Eliminar
+                  </button>
+                </ng-container>
+
+                <ng-template #modoEdicion>
+                  <button class="btn-primary btn-small" (click)="guardarEdicion()">Guardar</button>
+                  <button class="btn-ghost" (click)="cancelarEdicion()">Cancelar</button>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #sinEspecialidades>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h4>No hay especialidades cargadas</h4>
+          <p>Comienza agregando una nueva especialidad en el formulario.</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</div>
