@@ -1,0 +1,228 @@
+<div class="landing-container">
+  <!-- Header/Navbar -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#gradient1)"/>
+          <defs>
+            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#4f8cff"/>
+              <stop offset="100%" style="stop-color:#38e6b0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">Centro Médico</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <a href="#servicios" (click)="scrollToSection('servicios')">Servicios</a>
+        <a href="#sobre-nosotros" (click)="scrollToSection('sobre-nosotros')">Nosotros</a>
+        <a href="#contacto" (click)="scrollToSection('contacto')">Contacto</a>
+      </nav>
+      
+      <div class="auth-buttons">
+        <button class="btn-login" (click)="navigateToLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+          </svg>
+          Iniciar Sesión
+        </button>
+        <button class="btn-register" (click)="navigateToRegister()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V8c0-.55-.45-1-1-1s-1 .45-1 1v2H2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+          </svg>
+          Registrarse
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-background">
+      <div class="hero-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+    </div>
+    
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Tu <span class="highlight">Salud</span> es<br>
+          Nuestra <span class="highlight">Prioridad</span>
+        </h1>
+        <p class="hero-subtitle">
+          Sistema integral de gestión médica con tecnología moderna. 
+          Agenda tus turnos de forma rápida y segura.
+          Mantente conectado con nuestros profesionales.
+        </p>
+        
+        <div class="hero-buttons">
+          <button class="btn-primary" (click)="navigateToRegister()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="currentColor"/>
+            </svg>
+            Comenzar Ahora
+          </button>
+          
+          <button class="btn-secondary" (click)="scrollToSection('servicios')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+            </svg>
+            Ver Servicios
+          </button>
+        </div>
+        
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Pacientes Atendidos</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">15+</span>
+            <span class="stat-label">Especialidades</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Atención Online</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-image">
+        <div class="image-container">
+          <div class="floating-card card-1">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" fill="#4f8cff"/>
+            </svg>
+            <span>Agenda Digital</span>
+          </div>
+          
+          <div class="floating-card card-2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" fill="#38e6b0"/>
+            </svg>
+            <span>Profesionales</span>
+          </div>
+          
+          <div class="floating-card card-3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#ff6b9d"/>
+            </svg>
+            <span>Calidad Premium</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios Section -->
+  <section id="servicios" class="services">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nuestros Servicios</h2>
+        <p>Ofrecemos atención médica integral con tecnología de vanguardia</p>
+      </div>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Agenda Online</h3>
+          <p>Reserva tus turnos de forma rápida y sencilla, 24 horas al día, 7 días a la semana.</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Especialistas</h3>
+          <p>Contamos con médicos especialistas en todas las áreas para brindarte la mejor atención.</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Historial Digital</h3>
+          <p>Accede a tu historial médico completo y mantén un seguimiento de tu salud.</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Gestión Completa</h3>
+          <p>Sistema integral que conecta pacientes, médicos y administrativos en una plataforma.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>¿Listo para comenzar?</h2>
+        <p>Únete a cientos de pacientes que ya confían en nuestro sistema</p>
+        <div class="cta-buttons">
+          <button class="btn-cta-primary" (click)="navigateToRegister()">Registrarse Gratis</button>
+          <button class="btn-cta-secondary" (click)="navigateToLogin()">Ya tengo cuenta</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+            </svg>
+            <span>Centro Médico</span>
+          </div>
+          <p>Tu salud es nuestra prioridad. Sistema integral de gestión médica.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Servicios</h4>
+          <ul>
+            <li>Clínica Médica</li>
+            <li>Pediatría</li>
+            <li>Cardiología</li>
+            <li>Dermatología</li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contacto</h4>
+          <ul>
+            <li>📍 Av. Principal 123, Ciudad</li>
+            <li>📞 (011) 1234-5678</li>
+            <li>✉️ info@centromedico.com</li>
+            <li>🕒 Lun-Vie 8:00-20:00</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 Centro Médico. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+</div>
